@@ -37,33 +37,35 @@
     
     <script>
       window.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded, starting Typed.js animation');
+        // Fixed height container to prevent layout shifts
+        const element = document.getElementById('typed-element');
+        const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
         
-        // Initialize Typed.js
+        // Find the longest word to pre-set container size
+        const longestWord = words.reduce((a, b) => a.length > b.length ? a : b);
+        
+        // Pre-initialize with transparent text of the longest word
+        element.innerHTML = `<span style="opacity: 0;">${longestWord}</span>`;
+        
+        // Initialize Typed.js with more consistent options
         let options = {
-          strings: ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'],
+          strings: words,
           typeSpeed: 100,
           backSpeed: 80,
           backDelay: 1500,
-          startDelay: 400,
+          startDelay: 300,
           loop: true,
           showCursor: true,
           cursorChar: '|',
           smartBackspace: true,
+          preStringTyped: function() {
+            // Ensure consistent height during typing
+            element.style.minHeight = element.offsetHeight + 'px';
+          }
         };
         
-        // Start the typed animation
-        try {
-          const element = document.getElementById('typed-element');
-          if (element) {
-            console.log('Found element, initializing Typed.js');
-            new Typed('#typed-element', options);
-          } else {
-            console.error('Could not find typed-element');
-          }
-        } catch (error) {
-          console.error('Error initializing Typed.js:', error);
-        }
+        // Start typing animation
+        new Typed('#typed-element', options);
       });
     </script>
   </section>

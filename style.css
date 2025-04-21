@@ -452,21 +452,39 @@ footer {
   50% { opacity: 0; }
 }
 
-/* Intro section typography */
-.typing-static {
-  margin-right: 0.5rem;
+/* Stable intro container */
+.intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  line-height: 1.2;
+  position: relative;
+  z-index: 2;
+  height: auto;
 }
 
-/* Typed.js styling */
+/* Intro section typography with consistent baseline */
+.typing-static {
+  display: inline-block;
+  margin-right: 0.25rem;
+  vertical-align: baseline;
+}
+
+/* Typed.js element with fixed height/position to prevent shifts */
+#typed-element {
+  display: inline-block;
+  color: #fff;
+  position: relative;
+  vertical-align: baseline;
+  min-height: 1.2em;
+  line-height: 1.2;
+}
+
+/* Cursor styling */
 .typed-cursor {
   font-weight: bold;
   color: #fff;
-}
-
-/* Styling for the typed element */
-#typed-element {
-  color: #fff;
+  opacity: 1;
+  vertical-align: baseline;
   display: inline-block;
-  min-height: 1.2em;
-  position: relative;
 }
