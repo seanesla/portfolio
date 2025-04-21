@@ -103,6 +103,13 @@
       function type() {
         const currentWord = words[wordIndex];
         
+        // Control cursor blinking - only when idle
+        if(charIndex === currentWord.length || charIndex === 0) {
+          dynamicSpan.classList.add('blinking-cursor');
+        } else {
+          dynamicSpan.classList.remove('blinking-cursor');
+        }
+
         if(isDeleting) {
           // Deleting animation
           dynamicSpan.textContent = currentWord.substring(0, charIndex-1);

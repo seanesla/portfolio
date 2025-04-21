@@ -369,3 +369,12 @@ footer {
   overflow: hidden;
   min-width: 1ch;
 }
+
+.typing-dynamic.blinking-cursor {
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from, to { border-right-color: #fff; }
+  50% { border-right-color: transparent; }
+}
