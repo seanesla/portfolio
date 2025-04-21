@@ -30,6 +30,64 @@
       <span class="typing-static">Hi, I’m Sean Esla — Math &amp; CS @ SMC.</span>
       <span class="typing-dynamic"></span>
     </div>
+    <script>
+    // Direct inline typing effect - guaranteed to work
+    (function() {
+      const typingSpan = document.querySelector('.typing-dynamic');
+      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      
+      function type() {
+        const current = words[wordIndex];
+        
+        // Typing animation
+        if (!isDeleting) {
+          typingSpan.textContent = current.substring(0, charIndex + 1);
+          charIndex++;
+          
+          // Blink control
+          if (charIndex > 0 && charIndex < current.length) {
+            typingSpan.classList.add('typing');
+          } else {
+            typingSpan.classList.remove('typing');
+          }
+          
+          // Word complete
+          if (charIndex === current.length) {
+            isDeleting = true;
+            setTimeout(type, 1500); // Pause at end
+            return;
+          }
+          setTimeout(type, 150); // Type speed
+        } 
+        // Deleting animation
+        else { 
+          typingSpan.textContent = current.substring(0, charIndex);
+          charIndex--;
+          
+          // Blink control for deletion
+          if (charIndex > 0) {
+            typingSpan.classList.add('typing');
+          } else {
+            typingSpan.classList.remove('typing');
+          }
+          
+          // Fully deleted
+          if (charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+          }
+          setTimeout(type, 80); // Delete speed
+        }
+      }
+      
+      // Start immediately
+      typingSpan.textContent = '';
+      setTimeout(type, 500); // Initial delay
+    })();
+    </script>
   </section>
   <section id="about">
     <h2>About Me <span class="badge">✈️</span></h2>
