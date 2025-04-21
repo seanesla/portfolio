@@ -393,29 +393,34 @@ footer {
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.pdf-thumbnail:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  max-width: 100%;
 }
 
 .pdf-thumbnail img {
   width: 100%;
   height: auto;
   display: block;
+  object-fit: cover;
+  aspect-ratio: 16/9; /* maintain wide aspect */
 }
 
 .view-pdf-overlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  padding: 8px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 1rem;
   text-align: center;
-  font-size: 14px;
+  padding: 0 1rem;
+}
+
+.pdf-thumbnail:hover .view-pdf-overlay {
+  opacity: 1;
 }
 
 /* NCAS list styling */
