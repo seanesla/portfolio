@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:;">
 </head>
 <body>
   <div id="progress"></div>
@@ -108,7 +110,7 @@
   <section id="contact">
     <h2>Contact</h2>
     <div class="social-links">
-      <a href="https://linkedin.com/in/sean-esla-470a67296/" target="_blank" class="linkedin-link">
+      <a href="https://linkedin.com/in/sean-esla-470a67296/" target="_blank" rel="noopener noreferrer" class="linkedin-link">
         <img src="logos/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.webp" alt="LinkedIn" class="linkedin-logo">
       </a>
     </div>
@@ -217,16 +219,42 @@
     
     // Attach click handlers to navigation links
     navLinks.forEach(link => {
-      link.addEventListener('click', event => {
-        const targetId = link.getAttribute('href').substring(1);
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
         const targetSection = document.getElementById(targetId);
         
-        if (targetSection) {
-          const header = targetSection.querySelector('h2');
-          if (header) {
-            // Start the rainbow sweep animation
-            createRainbowSweep(header);
-          }
+        if (!targetSection) return;
+        
+        const header = targetSection.querySelector('h2');
+        if (!header) return;
+        
+        // Smooth‑scroll to the section (works in all modern browsers)
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Helper to run animation exactly once
+        const runSweep = () => createRainbowSweep(header);
+        
+        /* Prefer the native scrollend event when available (Chrome ≥ 115, Safari ≥ 17). */
+        if ('onscrollend' in window) {
+          const onceHandler = () => {
+            runSweep();
+            window.removeEventListener('scrollend', onceHandler);
+          };
+          window.addEventListener('scrollend', onceHandler, { once: true });
+        } else {
+          // Fallback for browsers without scrollend: debounce the scroll event.
+          let debounceTimer;
+          const onScroll = () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+              window.removeEventListener('scroll', onScroll);
+              runSweep();
+            }, 120); // 120 ms without scroll ≈ scroll stopped
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          // Call once to start debounce in case we're already at position
+          onScroll();
         }
       });
     });

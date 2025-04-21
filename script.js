@@ -12,32 +12,63 @@
 // Custom cursor follow
 (function(){
   const cursor = document.querySelector('.custom-cursor');
+  let cx = 0, cy = 0, ticking = false;
+
   document.addEventListener('mousemove', e => {
-    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-  });
+    cx = e.clientX;
+    cy = e.clientY;
+    if(!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => {
+        cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+        ticking = false;
+      });
+    }
+  }, { passive: true });
 })();
 
 // Hero parallax effect
 (function(){
   const hero = document.querySelector('.hero');
+  if(!hero) return;
+
   const baseBgX = 50; // CSS center X
   const baseBgY = 20; // CSS initial Y offset
+
+  let mx = 0, my = 0, rafPending = false;
+
   document.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 10;
-    const y = (e.clientY / window.innerHeight - 0.5) * 10;
-    hero.style.backgroundPosition = `${baseBgX + x}% ${baseBgY + y}%`;
-  });
+    mx = e.clientX;
+    my = e.clientY;
+    if(!rafPending){
+      rafPending = true;
+      requestAnimationFrame(() => {
+        const x = (mx / window.innerWidth - 0.5) * 10;
+        const y = (my / window.innerHeight - 0.5) * 10;
+        hero.style.backgroundPosition = `${baseBgX + x}% ${baseBgY + y}%`;
+        rafPending = false;
+      });
+    }
+  }, { passive: true });
 })();
 
 // Fade-in projects on scroll
 (function(){
   const projects = document.querySelectorAll('.project');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  }, { threshold: 0.1 });
-  projects.forEach(p => observer.observe(p));
+  if (!projects.length) return;
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+
+    projects.forEach(p => observer.observe(p));
+  } else {
+    // Fallback: immediately reveal projects for browsers without IntersectionObserver
+    projects.forEach(p => p.classList.add('visible'));
+  }
 })();
 
 // Fill skill bars
@@ -52,12 +83,23 @@
 // Scroll progress bar
 (function(){
   const progress = document.getElementById('progress');
+  if(!progress) return;
+
+  let lastScroll = 0;
+  let scheduled = false;
+
   window.addEventListener('scroll', () => {
-    const scroll = window.scrollY;
-    const height = document.body.scrollHeight - window.innerHeight;
-    const pct = (scroll / height) * 100;
-    progress.style.width = pct + '%';
-  });
+    lastScroll = window.scrollY;
+    if(!scheduled){
+      scheduled = true;
+      requestAnimationFrame(() => {
+        const height = document.body.scrollHeight - window.innerHeight;
+        const pct = (lastScroll / height) * 100;
+        progress.style.width = pct + '%';
+        scheduled = false;
+      });
+    }
+  }, { passive: true });
 })();
 
 // Theme toggle moved to inline script in index.html
@@ -96,10 +138,10 @@
   
   // Run this on page load
   function startTyping() {
-    console.log('Starting typing animation');
+    // console.log('Starting typing animation');
     const span = document.querySelector('.typing-dynamic');
     if (!span) {
-      console.error('Typing span not found!');
+      // console.error('Typing span not found!');
       return;
     }
     
