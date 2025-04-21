@@ -72,9 +72,26 @@ header {
   top: 0;
   background: var(--nav-bg);
   backdrop-filter: saturate(180%) blur(10px);
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--accent);
   z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-brand {
+  margin-right: auto; /* pushes everything else to the right */
+}
+
+.nav-logo {
+  height: 2rem;
+  display: block;
 }
 
 .nav ul {
@@ -82,8 +99,8 @@ header {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
   gap: 2rem;
+  align-items: center;
 }
 
 .nav a,

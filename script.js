@@ -107,36 +107,50 @@ document.addEventListener('DOMContentLoaded', () => {
   let wordIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
-  const typeSpeed = 150;
-  const deleteSpeed = 100;
-  const pause = 2000;
-
+  const typeSpeed = 100; // a bit faster typing
+  const deleteSpeed = 80; // a bit faster deleting
+  const pause = 1500; // less pause at word end
+  
+  // Need to start with something to see typing
+  dynamicSpan.textContent = '';
+  
   function type() {
     const current = words[wordIndex];
-    // Toggle 'typing' to pause blink while typing
-    if (charIndex === 0 || (!isDeleting && charIndex === current.length)) {
-      dynamicSpan.classList.remove('typing');
-    } else {
-      dynamicSpan.classList.add('typing');
-    }
+    
     if (!isDeleting) {
+      // ADDING characters
       dynamicSpan.textContent = current.substring(0, charIndex + 1);
       charIndex++;
+      
+      // Solid cursor when typing
+      dynamicSpan.classList.add('typing');
+      
       if (charIndex === current.length) {
+        // Reached end of word
         isDeleting = true;
+        dynamicSpan.classList.remove('typing'); // start blinking at end
         setTimeout(type, pause);
         return;
       }
     } else {
+      // REMOVING characters
       dynamicSpan.textContent = current.substring(0, charIndex - 1);
       charIndex--;
+      
+      // Solid cursor when deleting
+      dynamicSpan.classList.add('typing');
+      
       if (charIndex === 0) {
+        // Word fully deleted
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
+        dynamicSpan.classList.remove('typing'); // start blinking between words
       }
     }
+    
     setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
   }
-
+  
+  // Start the sequence
   type();
 });
