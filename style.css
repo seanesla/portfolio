@@ -368,9 +368,6 @@ footer {
   border-right: .1em solid #fff;
   overflow: hidden;
   min-width: 1ch;
-}
-
-.typing-dynamic.blinking-cursor {
   animation: blink-caret 0.75s step-end infinite;
 }
 
