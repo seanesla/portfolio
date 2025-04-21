@@ -28,44 +28,84 @@
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
     <div class="intro">
-      <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
-      <span id="typed-element"></span>
+      <div>Hi, I'm Sean Esla — Math &amp; CS @ SMC. <span id="typed-element"></span></div>
     </div>
     
-    <!-- CDN for Typed.js - a stable, reliable typing animation library -->
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    
+    <!-- Simple but reliable typing implementation -->
     <script>
-      window.addEventListener('DOMContentLoaded', function() {
-        // Fixed height container to prevent layout shifts
+      // Wait for the page to be fully loaded
+      document.addEventListener('DOMContentLoaded', function() {
         const element = document.getElementById('typed-element');
-        const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+        const phrases = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+        let currentPhrase = 0;
+        let currentChar = 0;
+        let isDeleting = false;
+        let isWaiting = false;
         
-        // Find the longest word to pre-set container size
-        const longestWord = words.reduce((a, b) => a.length > b.length ? a : b);
+        // Make sure element exists before proceeding
+        if (!element) {
+          console.error('Typed element not found');
+          return;
+        }
         
-        // Pre-initialize with transparent text of the longest word
-        element.innerHTML = `<span style="opacity: 0;">${longestWord}</span>`;
+        // Cursor element
+        const cursor = document.createElement('span');
+        cursor.textContent = '|';
+        cursor.className = 'cursor';
+        element.parentNode.insertBefore(cursor, element.nextSibling);
         
-        // Initialize Typed.js with more consistent options
-        let options = {
-          strings: words,
-          typeSpeed: 100,
-          backSpeed: 80,
-          backDelay: 1500,
-          startDelay: 300,
-          loop: true,
-          showCursor: true,
-          cursorChar: '|',
-          smartBackspace: true,
-          preStringTyped: function() {
-            // Ensure consistent height during typing
-            element.style.minHeight = element.offsetHeight + 'px';
+        // Type one character at a time
+        function typeCharacter() {
+          // Current phrase being typed
+          const phrase = phrases[currentPhrase];
+          
+          // If waiting, just return and the timeout will handle it
+          if (isWaiting) return;
+          
+          // Adding or removing characters
+          if (isDeleting) {
+            // Remove a character
+            element.textContent = phrase.substring(0, currentChar - 1);
+            currentChar--;
+            
+            // When fully deleted
+            if (currentChar === 0) {
+              isDeleting = false;
+              currentPhrase = (currentPhrase + 1) % phrases.length;
+              isWaiting = true;
+              setTimeout(function() {
+                isWaiting = false;
+                typeCharacter();
+              }, 500);
+            } else {
+              setTimeout(typeCharacter, 50);
+            }
+          } else {
+            // Add a character
+            element.textContent = phrase.substring(0, currentChar + 1);
+            currentChar++;
+            
+            // When fully typed
+            if (currentChar === phrase.length) {
+              isWaiting = true;
+              isDeleting = true;
+              setTimeout(function() {
+                isWaiting = false;
+                typeCharacter();
+              }, 1500);
+            } else {
+              setTimeout(typeCharacter, 100);
+            }
           }
-        };
+        }
         
-        // Start typing animation
-        new Typed('#typed-element', options);
+        // Start typing
+        setTimeout(typeCharacter, 500);
+        
+        // Cursor blink animation
+        setInterval(function() {
+          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+        }, 500);
       });
     </script>
   </section>

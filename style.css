@@ -452,39 +452,33 @@ footer {
   50% { opacity: 0; }
 }
 
-/* Stable intro container */
+/* Simple hero section styling */
 .intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  line-height: 1.2;
   position: relative;
   z-index: 2;
-  height: auto;
+  line-height: 1.5;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
 }
 
-/* Intro section typography with consistent baseline */
-.typing-static {
-  display: inline-block;
-  margin-right: 0.25rem;
-  vertical-align: baseline;
-}
-
-/* Typed.js element with fixed height/position to prevent shifts */
+/* Typed text styling */
 #typed-element {
   display: inline-block;
   color: #fff;
-  position: relative;
-  vertical-align: baseline;
-  min-height: 1.2em;
-  line-height: 1.2;
+  min-width: 4ch;
 }
 
-/* Cursor styling */
-.typed-cursor {
-  font-weight: bold;
-  color: #fff;
-  opacity: 1;
-  vertical-align: baseline;
+/* Simple cursor styling */
+.cursor {
   display: inline-block;
+  color: #fff;
+  font-weight: bold;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
 }
