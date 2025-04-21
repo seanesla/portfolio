@@ -28,36 +28,43 @@
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
     <div class="intro">
-      <div class="typing-container">
-        <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
-        <div class="role-container">
-          <span id="role">Pilot.</span><span class="cursor">|</span>
-        </div>
-      </div>
+      <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
+      <span id="typed-element"></span>
     </div>
     
+    <!-- CDN for Typed.js - a stable, reliable typing animation library -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    
     <script>
-      (function() {
-        // Very simple role switcher
-        const roles = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
-        const roleElement = document.getElementById('role');
-        const cursor = document.querySelector('.cursor');
-        let roleIndex = 0;
+      window.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, starting Typed.js animation');
         
-        // Start with first role
-        roleElement.textContent = roles[0];
+        // Initialize Typed.js
+        let options = {
+          strings: ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'],
+          typeSpeed: 100,
+          backSpeed: 80,
+          backDelay: 1500,
+          startDelay: 400,
+          loop: true,
+          showCursor: true,
+          cursorChar: '|',
+          smartBackspace: true,
+        };
         
-        // Simple blink effect for cursor
-        setInterval(() => {
-          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
-        }, 500);
-        
-        // Change roles every 3 seconds
-        setInterval(() => {
-          roleIndex = (roleIndex + 1) % roles.length;
-          roleElement.textContent = roles[roleIndex];
-        }, 3000);
-      })();
+        // Start the typed animation
+        try {
+          const element = document.getElementById('typed-element');
+          if (element) {
+            console.log('Found element, initializing Typed.js');
+            new Typed('#typed-element', options);
+          } else {
+            console.error('Could not find typed-element');
+          }
+        } catch (error) {
+          console.error('Error initializing Typed.js:', error);
+        }
+      });
     </script>
   </section>
   <section id="about">
