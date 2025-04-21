@@ -20,10 +20,12 @@
 // Hero parallax effect
 (function(){
   const hero = document.querySelector('.hero');
+  const baseBgX = 50; // CSS center X
+  const baseBgY = 20; // CSS initial Y offset
   document.addEventListener('mousemove', e => {
     const x = (e.clientX / window.innerWidth - 0.5) * 10;
     const y = (e.clientY / window.innerHeight - 0.5) * 10;
-    hero.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+    hero.style.backgroundPosition = `${baseBgX + x}% ${baseBgY + y}%`;
   });
 })();
 
@@ -58,20 +60,7 @@
   });
 })();
 
-// Theme toggle
-((function(){
-  const btn = document.getElementById('toggle-theme');
-  btn.addEventListener('click', () => {
-    const html = document.documentElement;
-    if (html.getAttribute('data-theme') === 'dark') {
-      html.removeAttribute('data-theme');
-      btn.textContent = '🌙';
-    } else {
-      html.setAttribute('data-theme', 'dark');
-      btn.textContent = '☀️';
-    }
-  });
-})());
+// Theme toggle moved to inline script in index.html
 
 // NCAS Poster Modal
 (function(){
@@ -99,64 +88,60 @@
   trigger.addEventListener('click', () => egg.classList.toggle('hidden'));
 })();
 
-// Completely rewrite typing animation
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, starting typing animation');
+// Immediately execute typing animation
+(function() {
   const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
   let wordIndex = 0;
   let charIndex = 0;
-  let isDeleting = false;
   
-  const span = document.querySelector('.typing-dynamic');
-  if (!span) {
-    console.error('Typing span not found');
-    return;
-  }
-  
-  span.textContent = '';
-  console.log('Starting the typing loop');
-  
-  function loop() {
-    const word = words[wordIndex];
-    
-    // Set solid or blinking cursor based on activity
-    if (isDeleting || charIndex === 0 || charIndex === word.length) {
-      span.classList.remove('typing'); // blinking cursor
-    } else {
-      span.classList.add('typing'); // solid cursor
+  // Run this on page load
+  function startTyping() {
+    console.log('Starting typing animation');
+    const span = document.querySelector('.typing-dynamic');
+    if (!span) {
+      console.error('Typing span not found!');
+      return;
     }
     
-    // Update text content
-    if (isDeleting) {
-      // Deleting text
-      span.textContent = word.substring(0, charIndex);
-      charIndex--;
-      
-      // When done deleting
-      if (charIndex < 0) {
-        isDeleting = false;
-        wordIndex = (wordIndex + 1) % words.length;
-        charIndex = 0;
-        span.textContent = '';
-      }
-      
-      setTimeout(loop, 80); // Delete speed
-    } else {
-      // Adding text
+    span.textContent = '';
+    
+    function type() {
+      const word = words[wordIndex];
       span.textContent = word.substring(0, charIndex + 1);
       charIndex++;
       
-      // When word is complete
-      if (charIndex >= word.length) {
-        isDeleting = true;
-        setTimeout(loop, 1500); // Pause at end of word
-        return;
+      if (charIndex < word.length) {
+        span.classList.add('typing');
+        setTimeout(type, 150);
+      } else {
+        span.classList.remove('typing');
+        setTimeout(erase, 2000);
       }
-      
-      setTimeout(loop, 150); // Type speed
     }
+    
+    function erase() {
+      const word = words[wordIndex];
+      charIndex--;
+      span.textContent = word.substring(0, charIndex);
+      
+      if (charIndex > 0) {
+        span.classList.add('typing');
+        setTimeout(erase, 80);
+      } else {
+        span.classList.remove('typing');
+        wordIndex = (wordIndex + 1) % words.length;
+        setTimeout(type, 500);
+      }
+    }
+    
+    // Start the animation
+    type();
   }
   
-  // Start it
-  loop();
-});
+  // Try to start immediately
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startTyping);
+  } else {
+    startTyping();
+  }
+})();

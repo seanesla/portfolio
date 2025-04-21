@@ -27,10 +27,6 @@ body {
   color: var(--text);
   cursor: none;
   transition: background 0.3s ease, color 0.3s ease;
-  background-image: 
-    linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
   position: relative;
 }
 
@@ -131,7 +127,7 @@ header {
   align-items: center;
   justify-content: center;
   height: 80vh;
-  background: url('imagesandpdfs/19E93611-3D07-4D74-BE69-E7272F5629CE_1_201_a.jpeg') center/cover no-repeat;
+  background: url('imagesandpdfs/19E93611-3D07-4D74-BE69-E7272F5629CE_1_201_a.jpeg') center 20%/cover no-repeat;
   transition: background-position 0.2s ease;
 }
 
@@ -326,6 +322,8 @@ footer {
   display: none;
 }
 
+/* Animation handled in JavaScript */
+
 .about-gallery {
   display: flex;
   justify-content: center;
@@ -507,4 +505,44 @@ footer {
   height: 0;
   position: absolute;
   pointer-events: none;
+}
+
+/* Dark mode overrides */
+html[data-theme="dark"] {
+  --bg: #222;
+  --text: #fff;
+  --nav-bg: rgba(34,34,34,0.95);
+  --card-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+html[data-theme="dark"] .nav-logo {
+  filter: invert(1) !important;
+}
+
+/* Dark mode work cards */
+html[data-theme="dark"] .work-card {
+  background: #333;
+  border-color: #555;
+}
+
+/* Dark mode hero overlay */
+html[data-theme="dark"] .hero-overlay {
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+}
+
+/* Toggle button spacing & style */
+#toggle-theme {
+  margin-left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: var(--text);
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+#toggle-theme:hover {
+  transform: scale(1.1);
+}
+#toggle-theme:focus {
+  outline: none;
 }

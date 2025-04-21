@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,86 +16,46 @@
       <div class="nav-brand">
         <img src="imagesandpdfs/porschey.png" alt="Logo" class="nav-logo">
       </div>
-      <ul>
-      <li><a href="#hero">Home</a></li>
+      <ul style="display:inline-flex; margin:0; padding:0; list-style:none; gap:1rem;">
+      <li><a href="#hero">Back to Top</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
       </ul>
+      <button id="theme-toggle" aria-label="Toggle light/dark theme" style="background: none; border: none; font-size: 1.5rem; margin-left: 1rem; cursor: pointer; color: var(--text); padding: 0.5rem 1rem;">☀️</button>
     </div>
   </nav>
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
     <div class="intro">
-      <div class="static-text">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</div>
-      <div class="typing-container">
-        <span id="typing-text"></span><span class="cursor">&nbsp;</span>
-      </div>
+      <span class="static-text">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
+      <span id="typing" class="typing-span"></span>
     </div>
   </section>
   
-  <!-- Extremely simple and reliable typing implementation -->
+  <!-- Stable typing with pseudo-element cursor (no extra span) -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Typed elements
-      const typingText = document.getElementById('typing-text');
-      const cursor = document.querySelector('.cursor');
-      
-      // Words to display
-      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.']; 
-      let wordIndex = 0;
-      let charIndex = 0;
-      let isDeleting = false;
-      
-      function type() {
-        // Current word being typed/deleted
-        const currentWord = words[wordIndex];
-        
-        // Set typing text
-        typingText.textContent = currentWord.substring(0, charIndex);
-        
-        // Manage cursor (solid during typing/deleting, blinking during pauses)
-        if (isDeleting || charIndex < currentWord.length) {
-          cursor.style.opacity = '1';
-          cursor.classList.add('typing');
-        } else {
-          cursor.classList.remove('typing');
-        }
-        
-        // Typing logic
-        if (!isDeleting && charIndex < currentWord.length) {
-          // Still typing current word
-          charIndex++;
-          setTimeout(type, 150);
-        } 
-        else if (!isDeleting && charIndex === currentWord.length) {
-          // Finished typing current word - pause before deleting
-          isDeleting = true;
-          setTimeout(type, 1500);
-        }
-        else if (isDeleting && charIndex > 0) {
-          // Deleting current word
-          charIndex--;
-          setTimeout(type, 80);
-        }
-        else if (isDeleting && charIndex === 0) {
-          // Finished deleting - move to next word
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length;
-          setTimeout(type, 500);
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const target = document.getElementById('typing');
+      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+      const longest = words.reduce((a,b)=>a.length>b.length?a:b);
+      // Reserve space equal to longest word
+      target.style.minWidth = `${longest.length}ch`;
+
+      let w = 0, c = 0, del=false;
+
+      function tick(){
+        const word = words[w];
+        target.textContent = c === 0 ? '\u00A0' : word.substring(0,c);
+        // manage indices
+        if(!del){
+          if(c<word.length){c++; setTimeout(tick,120);}else{del=true; setTimeout(tick,1500);} 
+        }else{
+          if(c>0){c--; setTimeout(tick,60);}else{del=false; w=(w+1)%words.length; setTimeout(tick,500);} 
         }
       }
-      
-      // Start typing animation
-      setTimeout(type, 1000);
-      
-      // Separate cursor blink logic
-      setInterval(function() {
-        if (!cursor.classList.contains('typing')) {
-          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
-        }
-      }, 500);
+      tick();
     });
   </script>
   <section id="about">
@@ -153,10 +113,7 @@
       </a>
     </div>
   </section>
-  <footer>
-    Made with love by Sean Esla <span id="easter-trigger">🌴</span>
-    <div id="easter-egg" class="hidden">🏄 Surprise! Beach playlist: <a href="https://open.spotify.com/playlist/37i9dQZF1DX0SM0LYsMb51" target="_blank">Listen</a></div>
-  </footer>
+  <!-- Footer removed as requested -->
   <script>
     // Dynamic accent color by time
     const h = new Date().getHours();
@@ -174,10 +131,12 @@
 
     // Hero parallax effect
     const hero = document.querySelector('.hero');
+    const baseBgX = 50; // CSS center
+    const baseBgY = 20; // initial Y offset matches CSS
     document.addEventListener('mousemove', e => {
       const x = (e.clientX / window.innerWidth - 0.5) * 10;
       const y = (e.clientY / window.innerHeight - 0.5) * 10;
-      hero.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+      hero.style.backgroundPosition = `${baseBgX + x}% ${baseBgY + y}%`;
     });
 
     // Fade-in projects on scroll
@@ -189,11 +148,87 @@
     }, { threshold: 0.1 });
     projects.forEach(p => observer.observe(p));
 
-    // Easter egg
-    const easterTrigger = document.getElementById('easter-trigger');
-    const easterEgg = document.getElementById('easter-egg');
-    easterTrigger.addEventListener('click', () => {
-      easterEgg.classList.toggle('hidden');
+    // Left-to-right rainbow sweep animation for section headers
+    const navLinks = document.querySelectorAll('nav a');
+    
+    // Rainbow colors array
+    const rainbowColors = [
+      '#FF0000', // Red
+      '#FF8000', // Orange 
+      '#FFFF00', // Yellow
+      '#00FF00', // Green
+      '#00FFFF', // Cyan
+      '#0000FF', // Blue
+      '#8000FF', // Purple
+      '#FF00FF'  // Magenta
+    ];
+    
+    // Function to create a rainbow sweep animation
+    function createRainbowSweep(header) {
+      // Store original text and create a wrapper
+      const originalText = header.textContent;
+      const wrapper = document.createElement('span');
+      wrapper.style.position = 'relative';
+      
+      // Clear the header and append our wrapper
+      header.textContent = '';
+      header.appendChild(wrapper);
+      
+      // Create a span for each character
+      for (let i = 0; i < originalText.length; i++) {
+        const charSpan = document.createElement('span');
+        charSpan.textContent = originalText[i];
+        charSpan.style.position = 'relative';
+        charSpan.style.color = 'inherit';
+        wrapper.appendChild(charSpan);
+      }
+      
+      // Animate each character with a staggered delay
+      const chars = wrapper.querySelectorAll('span');
+      const animationDuration = 50; // ms per character
+      
+      for (let i = 0; i < chars.length; i++) {
+        // Stagger the animations for the sweep effect
+        setTimeout(() => {
+          // Cycle through rainbow colors
+          for (let j = 0; j < rainbowColors.length; j++) {
+            setTimeout(() => {
+              chars[i].style.color = rainbowColors[j];
+              chars[i].style.textShadow = `0 0 10px ${rainbowColors[j]}`;
+              
+              // Reset to original after full sequence
+              if (j === rainbowColors.length - 1) {
+                setTimeout(() => {
+                  chars[i].style.color = '';
+                  chars[i].style.textShadow = '';
+                }, 70);
+              }
+            }, j * 70); // Time between color changes
+          }
+        }, i * animationDuration); // Staggered start for each character
+      }
+      
+      // Restore the original text after animation completes
+      const totalDuration = (originalText.length * animationDuration) + (rainbowColors.length * 70) + 100;
+      setTimeout(() => {
+        header.textContent = originalText;
+      }, totalDuration);
+    }
+    
+    // Attach click handlers to navigation links
+    navLinks.forEach(link => {
+      link.addEventListener('click', event => {
+        const targetId = link.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        
+        if (targetSection) {
+          const header = targetSection.querySelector('h2');
+          if (header) {
+            // Start the rainbow sweep animation
+            createRainbowSweep(header);
+          }
+        }
+      });
     });
 
     // Fill skill bars
@@ -201,6 +236,21 @@
     skillBars.forEach(bar => {
       const fill = bar.getAttribute('data-fill');
       bar.style.width = fill;
+    });
+
+    // Direct DOM manipulation for theme toggle
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      // Theme toggle clicked - no alert needed
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      
+      if (isDark) {
+        html.removeAttribute('data-theme');
+        this.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        this.textContent = '☀️';
+      }
     });
   </script>
 </body>

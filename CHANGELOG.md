@@ -1,5 +1,23 @@
 # Development Changelog
 
+## 2025-04-21
+
+### Added
+- Re-added dark mode with theme toggle button in navigation (no alert popups)
+- Added advanced left-to-right rainbow sweep animation for section headers
+- Adjusted hero background image position to improve text visibility
+
+### Changed
+- Removed grid background pattern for cleaner look
+- Changed "Home" to "Back to Top" in navigation
+- Removed footer section for cleaner ending
+- Fixed typing animation to prevent vertical jumps
+
+### Fixed
+- Theme toggle now works properly without annoying popups
+- Section highlight animation now properly sweeps left to right across each character
+- Ensured hero background image stays positioned correctly with cursor interactions
+
 ## 2025-04-20
 
 ### Added
