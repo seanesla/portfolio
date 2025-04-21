@@ -294,13 +294,15 @@ header {
 .social-links {
   display: flex;
   justify-content: center;
-  margin: 1.5rem 0;
+  margin: 2rem 0 3rem;
 }
 
 .linkedin-link {
   display: inline-block;
   transform: translateY(0);
   transition: transform 0.3s ease, filter 0.3s ease;
+  padding: 20px; /* Increase clickable area */
+  margin: 0 -20px; /* Offset padding to keep visual position */
 }
 
 .linkedin-link:hover {
@@ -309,7 +311,7 @@ header {
 }
 
 .linkedin-logo {
-  width: 60px;
+  width: 120px; /* Doubled size */
   height: auto;
 }
 
