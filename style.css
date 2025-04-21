@@ -452,31 +452,47 @@ footer {
   50% { opacity: 0; }
 }
 
-/* Typing effect with separated cursor */
+/* Stable typing container */
+.intro {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.typing-static, .typing-dynamic {
+  margin-right: 0.25em;
+}
+
+/* Typing effect with stable cursor */
 .typing-dynamic {
   position: relative;
   display: inline-block;
+  min-width: 2ch; /* Minimum width to prevent layout shifts */
+  min-height: 1.2em;
+  vertical-align: baseline;
 }
 
-/* Add cursor as pseudo-element so it's separate from text */
+/* Fixed width cursor to prevent movement */
 .typing-dynamic::after {
   content: '';
   position: absolute;
-  right: -0.1em;
-  top: 0;
-  height: 100%;
-  width: 0.1em;
+  right: -3px;
+  top: 10%; 
+  bottom: 10%;
+  width: 2px;
   background-color: #fff;
   animation: blink-caret 0.75s step-end infinite;
 }
 
-/* When typing, cursor should be solid */
+/* Solid cursor when typing */
 .typing-dynamic.typing::after {
   animation: none;
   opacity: 1;
 }
 
-/* Redefine blink animation */
+/* Redefined blink animation */
 @keyframes blink-caret {
   from, to { opacity: 1; }
   50% { opacity: 0; }

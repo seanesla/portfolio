@@ -32,66 +32,56 @@
       <span class="typing-dynamic"></span>
       <script>
         (function() {
-          // Typing effect - direct implementation
+          // Simplified typing effect
           const typingElement = document.querySelector('.typing-dynamic');
           const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+          
+          // Pre-calculate max width to avoid layout shifts
+          const longestWord = words.reduce((a, b) => a.length > b.length ? a : b);
+          typingElement.style.width = `${longestWord.length}ch`;
+          
           let wordIndex = 0;
           let charIndex = 0;
           let isDeleting = false;
 
-          // Initialize
+          // Clear initial content
           typingElement.textContent = '';
-          console.log('Starting inline typing effect');
           
           function typeLoop() {
             const currentWord = words[wordIndex];
             
-            // Update text based on typing direction
-            if (isDeleting) {
-              // Deleting
-              typingElement.textContent = currentWord.substring(0, charIndex);
-              charIndex--;
-              
-              // Control cursor - solid while typing/deleting
+            // Always add solid cursor during activity
+            if (charIndex > 0 && (charIndex < currentWord.length || isDeleting)) {
               typingElement.classList.add('typing');
-              
-              // When word is fully deleted
-              if (charIndex < 0) {
+            } else {
+              typingElement.classList.remove('typing');
+            }
+            
+            // Update text content
+            typingElement.textContent = currentWord.substring(0, charIndex);
+            
+            if (isDeleting) {
+              charIndex--;
+              if (charIndex === 0) {
                 isDeleting = false;
                 wordIndex = (wordIndex + 1) % words.length;
-                charIndex = 0;
-                
-                // Remove typing class to make cursor blink during pause
-                typingElement.classList.remove('typing');
-                
-                setTimeout(typeLoop, 500); // Pause before typing next word
-              } else {
-                setTimeout(typeLoop, 80); // Delete speed
+                setTimeout(typeLoop, 700); // Pause between words
+                return;
               }
+              setTimeout(typeLoop, 80); // Delete speed
             } else {
-              // Typing
-              typingElement.textContent = currentWord.substring(0, charIndex + 1);
               charIndex++;
-              
-              // Control cursor - solid while typing
-              typingElement.classList.add('typing');
-              
-              // When word is fully typed
-              if (charIndex >= currentWord.length) {
+              if (charIndex > currentWord.length) {
                 isDeleting = true;
-                
-                // Remove typing class to make cursor blink during pause
-                typingElement.classList.remove('typing');
-                
                 setTimeout(typeLoop, 1500); // Pause at end of word
-              } else {
-                setTimeout(typeLoop, 120); // Type speed
+                return;
               }
+              setTimeout(typeLoop, 150); // Type speed
             }
           }
           
-          // Start typing loop immediately
-          typeLoop();
+          // Start with a slight delay
+          setTimeout(typeLoop, 300);
         })();
       </script>
     </div>
