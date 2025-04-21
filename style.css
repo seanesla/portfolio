@@ -75,6 +75,7 @@ header {
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--accent);
   z-index: 1000;
+  height: 4rem; /* Fixed height */
 }
 
 .nav-container {
@@ -86,11 +87,17 @@ header {
 
 .nav-brand {
   margin-right: auto; /* pushes everything else to the right */
+  margin-left: 0; /* align far left */
+  position: relative;
+  left: -0.5rem; /* push even further left */
 }
 
 .nav-logo {
-  height: 3.2rem; /* Much bigger */
+  height: 4.5rem; /* Much bigger */
+  width: auto;
   display: block;
+  position: relative;
+  top: -0.25rem; /* slight vertical adjustment */
 }
 
 .nav ul {
