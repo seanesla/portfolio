@@ -568,3 +568,42 @@ html[data-theme="dark"] .hero-overlay {
 #toggle-theme:focus {
   outline: none;
 }
+
+@media (max-width: 600px) {
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  nav ul {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .hero {
+    padding: 4rem 1rem;
+    background-position: center top;
+  }
+  .static-text, .typing-span {
+    font-size: 1.2rem;
+  }
+  .work-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .work-card {
+    width: 100%;
+  }
+  .skills {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .linkedin-logo {
+    width: 80px;
+  }
+  .pdf-thumbnail img {
+    aspect-ratio: 4/3;
+  }
+  .poster-iframe {
+    height: 55vh;
+  }
+}

@@ -290,32 +290,5 @@
       }
     });
   </script>
-  <!-- PDF Modal -->
-  <div id="ncas-poster-modal" class="pdf-modal">
-    <span id="close-pdf-modal" class="close-modal">&times;</span>
-    <iframe src="about:blank" frameborder="0"></iframe>
-  </div>
-  
-  <script>
-    // PDF Modal functionality
-    function openPDFModal() {
-      const modal = document.getElementById('ncas-poster-modal');
-      const iframe = modal.querySelector('iframe');
-      iframe.src = 'imagesandpdfs/NEW%20%20UPDATED%20POSTER.pdf';
-      modal.style.display = 'block';
-    }
-    
-    // Close when X is clicked or outside the content
-    window.onclick = function(event) {
-      const modal = document.getElementById('ncas-poster-modal');
-      if (event.target == modal || event.target.id === 'close-pdf-modal') {
-        modal.style.display = 'none';
-        // Reset iframe source to reduce memory usage
-        setTimeout(function() {
-          modal.querySelector('iframe').src = 'about:blank';
-        }, 300);
-      }
-    }
-  </script>
 </body>
 </html>

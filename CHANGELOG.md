@@ -1,5 +1,19 @@
 # Development Changelog
 
+## 2025-04-21 [Current work on mobile-responsive branch]
+
+### Added
+- Added responsive mobile design with smaller elements and single-column layout
+- Added preconnect for Google Fonts to improve loading speed
+
+### Changed
+- Changed poster display to use lazy-loading for better performance
+
+### Fixed
+- Fixed stray "X" button appearing on the screen
+- Fixed navigation menu layout on small screens
+- Fixed content sizing issues on mobile devices
+
 ## 2025-04-21
 
 ### Added
