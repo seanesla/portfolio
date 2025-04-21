@@ -1,0 +1,250 @@
+:root {
+  --accent: #FF8C5A; /* sunset peach */
+  --accent-light: #FFD1BA; /* light peach */
+  --accent-dark: #E46A3C; /* deeper peach */
+  --bg: #fff;
+  --text: #333;
+  --grid-color: rgba(255, 140, 90, 0.03);
+  --grid-size: 40px;
+  --nav-bg: rgba(255,255,255,0.95);
+  --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --accent: #FFAD8A;
+  --accent-light: #FFDCCB;
+  --accent-dark: #E46A3C;
+  --bg: #1a1a1a;
+  --text: #fafafa;
+  --grid-color: rgba(255, 173, 138, 0.06);
+  --nav-bg: rgba(26,26,26,0.9);
+  --card-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  cursor: none;
+  transition: background 0.3s ease, color 0.3s ease;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  position: relative;
+}
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+  z-index: 10000;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0;
+  background: var(--accent);
+  z-index: 10001;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+header {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.5rem;
+  padding: 1rem 0;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(10px);
+  padding: 1rem;
+  border-bottom: 1px solid var(--accent);
+  z-index: 1000;
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.nav a,
+.nav button {
+  text-decoration: none;
+  color: var(--text);
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  background: url('https://source.unsplash.com/1600x900/?aircraft,sunset') center/cover no-repeat;
+  transition: background-position 0.2s ease;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)); /* soft darken */
+  z-index: 1;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'><path fill='%23fff' d='M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z'/></svg>") no-repeat center bottom;
+  background-size: cover;
+}
+
+.intro, .typing {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 2rem;
+}
+
+.typing {
+  border-right: .1em solid #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 2s steps(20) 1 forwards;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.projects {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 2rem 1rem;
+}
+
+.bar {
+  width: 100%;
+  height: 10px;
+  background: #eee;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.fill {
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+  position: relative;
+}
+
+.project {
+  flex: 0 0 300px;
+  height: 200px;
+  background: #eee;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.project.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.work-card {
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--card-shadow);
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.work-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.badge {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+#about, #contact, #work, #skills {
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  scroll-margin-top: 80px;
+}
+
+#about h2, #contact h2, #map h2 {
+  margin-top: 0;
+}
+
+#map iframe {
+  width: 100%;
+  border: none;
+}
+
+footer {
+  background: var(--bg);
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid var(--accent);
+}
+
+.hidden {
+  display: none;
+}

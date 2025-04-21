@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sean Esla - Math/CS Student & Pilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root { --accent: #FFD1BA; }
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Inter', sans-serif;
+      color: #333; background: #fff;
+      cursor: none;
+    }
+    .custom-cursor {
+      position: fixed; top: 0; left: 0;
+      width: 12px; height: 12px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      z-index: 10000;
+    }
+    header {
+      position: sticky; top: 0;
+      background: #fff; padding: 1rem;
+      text-align: center; font-weight: 600;
+      border-bottom: 1px solid #eee;
+    }
+    .hero {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      height: 80vh;
+      background: url('https://source.unsplash.com/1600x900/?southern-california,beach') center/cover no-repeat;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 80px;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'><path fill='%23fff' d='M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z'/></svg>") no-repeat center bottom;
+      background-size: cover;
+    }
+    .intro { position: relative; color: #fff; font-size: 2rem; }
+    .typing { border-right: .1em solid #fff; white-space: nowrap; overflow: hidden; width: 0; animation: typing 2s steps(20) 1 forwards; }
+    @keyframes typing { from { width: 0; } to { width: 100%; } }
+    .projects {
+      display: flex; overflow-x: auto;
+      gap: 1rem; padding: 2rem 1rem;
+    }
+    .project {
+      flex: 0 0 300px; height: 200px;
+      background: #eee; border-radius: 8px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .project.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .nav {
+      position: sticky; top: 0;
+      background: #fff; padding: 1rem;
+      text-align: center; font-weight: 600;
+      border-bottom: 1px solid #eee;
+    }
+    .nav ul {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; justify-content: space-between;
+    }
+    .nav li {
+      margin-right: 20px;
+    }
+    .nav a {
+      text-decoration: none; color: #333;
+    }
+    .nav button {
+      background: none; border: none;
+      font-size: 1rem; cursor: pointer;
+    }
+    #about, #contact {
+      padding: 2rem;
+    }
+    #about h2, #contact h2 {
+      margin-top: 0;
+    }
+    footer {
+      background: #fff; padding: 1rem;
+      text-align: center; font-weight: 600;
+      border-top: 1px solid #eee;
+    }
+    #easter-egg {
+      display: none;
+    }
+    #easter-egg.hidden {
+      display: none;
+    }
+    .work-cards {
+      display: flex; gap: 1rem;
+    }
+    .work-card {
+      flex: 1;
+      background: #eee; padding: 1rem;
+      border-radius: 8px;
+    }
+    .work-card img {
+      width: 100%; height: 100px;
+      object-fit: cover; border-radius: 8px 8px 0 0;
+    }
+    .skills {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .skill-item {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .bar {
+      width: 100%; height: 10px;
+      background: #ddd; border-radius: 10px;
+    }
+    .fill {
+      width: 0; height: 100%;
+      background: var(--accent); border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="progress"></div>
+  <div class="custom-cursor"></div>
+  <nav class="nav">
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><button id="toggle-theme">🌙</button></li>
+    </ul>
+  </nav>
+  <section id="hero" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="intro"><span class="typing">Hi, I’m Sean Esla — Math & CS @ SMC. Pilot. NASA Intern.</span></div>
+  </section>
+  <section class="projects">
+    <div class="project"></div>
+    <div class="project"></div>
+    <div class="project"></div>
+  </section>
+  <section id="about">
+    <h2>About Me <span class="badge">✈️</span></h2>
+    <p>I’m a Math & Computer Science student at Santa Monica College with internships at NASA’s NCAS Missions 1 & 2 and Caltech’s AT3 program. Skilled in Python, C++, and Java.</p>
+  </section>
+  <section id="work">
+    <h2>Experience</h2>
+    <div class="work-cards">
+      <div class="work-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Logo_of_NASA.svg" alt="NASA Logo">
+        <h3>NASA NCAS Missions 1 & 2</h3>
+        <p>Built telemetry analysis tools in Python for flight data.</p>
+      </div>
+      <div class="work-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/California_Institute_of_Technology_seal.svg" alt="Caltech Logo">
+        <h3>Caltech AT3 Intern</h3>
+        <p>Maintained lab robotics and automation scripts in C++.</p>
+      </div>
+    </div>
+  </section>
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills">
+      <div class="skill-item">
+        <span>C++</span>
+        <div class="bar"><div class="fill" data-fill="85%"></div></div>
+      </div>
+      <div class="skill-item">
+        <span>Java</span>
+        <div class="bar"><div class="fill" data-fill="75%"></div></div>
+      </div>
+      <div class="skill-item">
+        <span>Python</span>
+        <div class="bar"><div class="fill" data-fill="90%"></div></div>
+      </div>
+    </div>
+  </section>
+  <section id="contact">
+    <h2>Contact</h2>
+    <p><a href="resume.pdf" download>Download Resume</a></p>
+    <p>LinkedIn: <a href="https://linkedin.com/in/sean-esla-470a67296/" target="_blank">linkedin.com/in/sean-esla-470a67296/</a></p>
+  </section>
+  <footer>
+    &copy; 2025 Your Name <span id="easter-trigger">🌴</span>
+    <div id="easter-egg" class="hidden">🏄 Surprise! Beach playlist: <a href="https://open.spotify.com/playlist/37i9dQZF1DX0SM0LYsMb51" target="_blank">Listen</a></div>
+  </footer>
+  <script defer src="script.js"></script>
+  <script>
+    // Dynamic accent color by time
+    const h = new Date().getHours();
+    const root = document.documentElement;
+    if (h < 6) root.style.setProperty('--accent', '#DCC6E0');
+    else if (h < 12) root.style.setProperty('--accent', '#FFD1BA');
+    else if (h < 18) root.style.setProperty('--accent', '#AEDFF7');
+    else root.style.setProperty('--accent', '#B49FCC');
+
+    // Custom cursor
+    const cursor = document.querySelector('.custom-cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    });
+
+    // Hero parallax effect
+    const hero = document.querySelector('.hero');
+    document.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 10;
+      const y = (e.clientY / window.innerHeight - 0.5) * 10;
+      hero.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+    });
+
+    // Fade-in projects on scroll
+    const projects = document.querySelectorAll('.project');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    projects.forEach(p => observer.observe(p));
+
+    // Easter egg
+    const easterTrigger = document.getElementById('easter-trigger');
+    const easterEgg = document.getElementById('easter-egg');
+    easterTrigger.addEventListener('click', () => {
+      easterEgg.classList.toggle('hidden');
+    });
+
+    // Fill skill bars
+    const skillBars = document.querySelectorAll('.fill');
+    skillBars.forEach(bar => {
+      const fill = bar.getAttribute('data-fill');
+      bar.style.width = fill;
+    });
+  </script>
+</body>
+</html>
