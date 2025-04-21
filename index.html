@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sean Esla - Math/CS Student & Pilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
@@ -87,7 +89,10 @@
           <li><strong>Mission 2:</strong> Resolved technical disagreements within a collaborative project by validating diverse viewpoints, using data‑driven analysis to justify design trade‑offs, and facilitating team consensus to balance competing priorities, ensuring successful project outcomes and forward momentum.</li>
         </ul>
         <div class="ncas-poster">
-          <iframe src="imagesandpdfs/NEW%20%20UPDATED%20POSTER.pdf" frameborder="0"></iframe>
+          <div class="pdf-thumbnail" onclick="openPDFModal()">
+            <img src="logos/NASA-Logo-Large.png" alt="NCAS Poster (Click to view)" loading="lazy">
+            <div class="view-pdf-overlay">Click to view full PDF</div>
+          </div>
         </div>
       </div>
       <div class="work-card">
@@ -287,6 +292,33 @@
         this.textContent = '☀️';
       }
     });
+  </script>
+  <!-- PDF Modal -->
+  <div id="ncas-poster-modal" class="pdf-modal">
+    <span id="close-pdf-modal" class="close-modal">&times;</span>
+    <iframe src="about:blank" frameborder="0"></iframe>
+  </div>
+  
+  <script>
+    // PDF Modal functionality
+    function openPDFModal() {
+      const modal = document.getElementById('ncas-poster-modal');
+      const iframe = modal.querySelector('iframe');
+      iframe.src = 'imagesandpdfs/NEW%20%20UPDATED%20POSTER.pdf';
+      modal.style.display = 'block';
+    }
+    
+    // Close when X is clicked or outside the content
+    window.onclick = function(event) {
+      const modal = document.getElementById('ncas-poster-modal');
+      if (event.target == modal || event.target.id === 'close-pdf-modal') {
+        modal.style.display = 'none';
+        // Reset iframe source to reduce memory usage
+        setTimeout(function() {
+          modal.querySelector('iframe').src = 'about:blank';
+        }, 300);
+      }
+    }
   </script>
 </body>
 </html>

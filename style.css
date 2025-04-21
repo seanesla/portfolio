@@ -337,8 +337,8 @@ footer {
   filter: brightness(0.85) saturate(0.9);
 }
 
-/* NCAS Poster Modal */
-.modal {
+/* PDF Modal styling */
+.pdf-modal {
   display: none;
   position: fixed;
   z-index: 10000;
@@ -346,48 +346,76 @@ footer {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.7);
-}
-.modal-content {
-  margin: 5% auto;
-  width: 90%;
-  max-width: 800px;
-  background: #fff;
-  padding: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.modal-content iframe {
-  width: 100%;
-  height: 80vh;
-  border: none;
-}
-.modal .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  padding: 10px;
-  cursor: pointer;
-}
-.modal .close:hover {
-  color: #000;
+  background-color: rgba(0,0,0,0.85);
 }
 
-/* Inline NCAS Poster Styling */
+.pdf-modal iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 900px;
+  height: 80%;
+  background: white;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+.close-modal:hover {
+  color: #ddd;
+  text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+/* NCAS Poster Styling - Optimized */
 .ncas-poster {
   margin: 1rem 0;
   width: 100%;
+  max-width: 600px;
 }
 
-.ncas-poster iframe {
-  width: 100%;
-  height: 80vh;  /* taller preview */
-  border: none;
-  border-radius: 4px;
+/* PDF Thumbnail styling */
+.pdf-thumbnail {
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pdf-thumbnail:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.pdf-thumbnail img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.view-pdf-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
 }
 
 /* NCAS list styling */
