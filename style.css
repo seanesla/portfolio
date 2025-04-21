@@ -80,7 +80,6 @@ header {
 .nav-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -90,7 +89,7 @@ header {
 }
 
 .nav-logo {
-  height: 2rem;
+  height: 2.4rem; /* 20% bigger */
   display: block;
 }
 
@@ -101,6 +100,8 @@ header {
   display: flex;
   gap: 2rem;
   align-items: center;
+  flex: 1;
+  justify-content: center;
 }
 
 .nav a,
