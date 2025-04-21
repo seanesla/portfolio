@@ -99,58 +99,64 @@
   trigger.addEventListener('click', () => egg.classList.toggle('hidden'));
 })();
 
-// Dynamic typing effect for hero section
-document.addEventListener('DOMContentLoaded', () => {
-  const dynamicSpan = document.querySelector('.typing-dynamic');
-  if(!dynamicSpan) return; // safety
+// Completely rewrite typing animation
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, starting typing animation');
   const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
   let wordIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
-  const typeSpeed = 100; // a bit faster typing
-  const deleteSpeed = 80; // a bit faster deleting
-  const pause = 1500; // less pause at word end
   
-  // Need to start with something to see typing
-  dynamicSpan.textContent = '';
-  
-  function type() {
-    const current = words[wordIndex];
-    
-    if (!isDeleting) {
-      // ADDING characters
-      dynamicSpan.textContent = current.substring(0, charIndex + 1);
-      charIndex++;
-      
-      // Solid cursor when typing
-      dynamicSpan.classList.add('typing');
-      
-      if (charIndex === current.length) {
-        // Reached end of word
-        isDeleting = true;
-        dynamicSpan.classList.remove('typing'); // start blinking at end
-        setTimeout(type, pause);
-        return;
-      }
-    } else {
-      // REMOVING characters
-      dynamicSpan.textContent = current.substring(0, charIndex - 1);
-      charIndex--;
-      
-      // Solid cursor when deleting
-      dynamicSpan.classList.add('typing');
-      
-      if (charIndex === 0) {
-        // Word fully deleted
-        isDeleting = false;
-        wordIndex = (wordIndex + 1) % words.length;
-        dynamicSpan.classList.remove('typing'); // start blinking between words
-      }
-    }
-    
-    setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
+  const span = document.querySelector('.typing-dynamic');
+  if (!span) {
+    console.error('Typing span not found');
+    return;
   }
   
-  // Start the sequence
-  type();
+  span.textContent = '';
+  console.log('Starting the typing loop');
+  
+  function loop() {
+    const word = words[wordIndex];
+    
+    // Set solid or blinking cursor based on activity
+    if (isDeleting || charIndex === 0 || charIndex === word.length) {
+      span.classList.remove('typing'); // blinking cursor
+    } else {
+      span.classList.add('typing'); // solid cursor
+    }
+    
+    // Update text content
+    if (isDeleting) {
+      // Deleting text
+      span.textContent = word.substring(0, charIndex);
+      charIndex--;
+      
+      // When done deleting
+      if (charIndex < 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        charIndex = 0;
+        span.textContent = '';
+      }
+      
+      setTimeout(loop, 80); // Delete speed
+    } else {
+      // Adding text
+      span.textContent = word.substring(0, charIndex + 1);
+      charIndex++;
+      
+      // When word is complete
+      if (charIndex >= word.length) {
+        isDeleting = true;
+        setTimeout(loop, 1500); // Pause at end of word
+        return;
+      }
+      
+      setTimeout(loop, 150); // Type speed
+    }
+  }
+  
+  // Start it
+  loop();
 });
