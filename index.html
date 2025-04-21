@@ -31,13 +31,17 @@
       <span class="typing-dynamic"></span>
     </div>
     <script>
-    // Direct inline typing effect - guaranteed to work
+    // Smooth typing animation with fixed width container
     (function() {
       const typingSpan = document.querySelector('.typing-dynamic');
       const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
       let wordIndex = 0;
       let charIndex = 0;
       let isDeleting = false;
+      
+      // Pre-calculate the max width needed - prevents layout shifts
+      const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, '');
+      typingSpan.style.minWidth = '0';
       
       function type() {
         const current = words[wordIndex];
@@ -47,45 +51,46 @@
           typingSpan.textContent = current.substring(0, charIndex + 1);
           charIndex++;
           
-          // Blink control
-          if (charIndex > 0 && charIndex < current.length) {
-            typingSpan.classList.add('typing');
-          } else {
-            typingSpan.classList.remove('typing');
-          }
+          // Solid cursor while typing
+          typingSpan.classList.add('typing');
           
           // Word complete
           if (charIndex === current.length) {
             isDeleting = true;
-            setTimeout(type, 1500); // Pause at end
+            typingSpan.classList.remove('typing'); // blinking at end
+            setTimeout(type, 2000); // Longer pause at end for readability
             return;
           }
-          setTimeout(type, 150); // Type speed
+          
+          // Consistent timing prevents stutters
+          setTimeout(type, 180); // Slightly slower for smoothness
         } 
         // Deleting animation
         else { 
           typingSpan.textContent = current.substring(0, charIndex);
           charIndex--;
           
-          // Blink control for deletion
-          if (charIndex > 0) {
-            typingSpan.classList.add('typing');
-          } else {
-            typingSpan.classList.remove('typing');
-          }
+          // Solid cursor while deleting
+          typingSpan.classList.add('typing');
           
           // Fully deleted
           if (charIndex === 0) {
             isDeleting = false;
             wordIndex = (wordIndex + 1) % words.length;
+            typingSpan.classList.remove('typing'); // blinking between words
+            setTimeout(type, 500); // Pause before next word
+            return;
           }
-          setTimeout(type, 80); // Delete speed
+          
+          // Delete at consistent pace
+          setTimeout(type, 100); // Slightly slower deleting for smoothness
         }
       }
       
-      // Start immediately
+      // Start clean with empty text
       typingSpan.textContent = '';
-      setTimeout(type, 500); // Initial delay
+      typingSpan.classList.remove('typing');
+      setTimeout(type, 1000); // Longer initial delay to let page settle
     })();
     </script>
   </section>

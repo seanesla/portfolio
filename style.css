@@ -421,15 +421,24 @@ footer {
 .typing-dynamic {
   border-right: .1em solid #fff;
   overflow: hidden;
+  display: inline-block;
   min-width: 1ch;
   animation: blink-caret 0.75s step-end infinite;
+  position: relative;
 }
 
 .typing-dynamic.typing {
   animation: none;
+  border-right-color: #fff;
 }
 
 @keyframes blink-caret {
   from, to { border-right-color: #fff; }
   50% { border-right-color: transparent; }
+}
+
+/* Add this to prevent layout shifts during typing */
+.typing-static, .typing-dynamic {
+  display: inline-block;
+  vertical-align: bottom;
 }
