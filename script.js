@@ -67,11 +67,28 @@
   });
 })();
 
+// NCAS Poster Modal
+(function(){
+  const ncasCard = document.getElementById('ncas-card');
+  const modal = document.getElementById('ncas-poster-modal');
+  const closeBtn = modal.querySelector('.close');
+  if(ncasCard && modal && closeBtn) {
+    ncasCard.style.cursor = 'pointer';
+    ncasCard.addEventListener('click', () => {
+      modal.style.display = 'block';
+    });
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    modal.addEventListener('click', e => {
+      if(e.target === modal) modal.style.display = 'none';
+    });
+  }
+})();
+
 // Easter egg
 (function(){
   const trigger = document.getElementById('easter-trigger');
   const egg = document.getElementById('easter-egg');
   trigger.addEventListener('click', () => egg.classList.toggle('hidden'));
 })();
-
-
