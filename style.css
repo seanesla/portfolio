@@ -10,18 +10,6 @@
   --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-/* Dark theme */
-[data-theme="dark"] {
-  --accent: #FFAD8A;
-  --accent-light: #FFDCCB;
-  --accent-dark: #E46A3C;
-  --bg: #1a1a1a;
-  --text: #fafafa;
-  --grid-color: rgba(255, 173, 138, 0.06);
-  --nav-bg: rgba(26,26,26,0.9);
-  --card-shadow: 0 8px 25px rgba(0,0,0,0.2);
-}
-
 * {
   box-sizing: border-box;
 }
@@ -114,7 +102,7 @@ header {
   align-items: center;
   justify-content: center;
   height: 80vh;
-  background: url('https://source.unsplash.com/1600x900/?aircraft,sunset') center/cover no-repeat;
+  background: url('imagesandpdfs/19E93611-3D07-4D74-BE69-E7272F5629CE_1_201_a.jpeg') center/cover no-repeat;
   transition: background-position 0.2s ease;
 }
 
@@ -202,9 +190,14 @@ header {
 
 .work-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.work-cards > .work-card {
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .work-card {
@@ -241,11 +234,22 @@ header {
   font-size: 0.8rem;
 }
 
-#about, #contact, #work, #skills {
+#about, #contact, #experience, #skills {
   padding: 2rem 1rem;
   max-width: 800px;
   margin: 0 auto;
   scroll-margin-top: 80px;
+  text-align: center;
+}
+
+#experience {
+  max-width: none;
+  width: 100%;
+}
+
+#about p, #contact p {
+  margin: 0 auto 1.5rem;
+  max-width: 700px;
 }
 
 #about h2, #contact h2, #map h2 {
@@ -266,6 +270,19 @@ footer {
 
 .hidden {
   display: none;
+}
+
+.about-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.about-gallery img {
+  width: 200px; height: 200px;
+  object-fit: cover; border-radius: 8px;
+  filter: brightness(0.85) saturate(0.9);
 }
 
 /* NCAS Poster Modal */
@@ -305,4 +322,50 @@ footer {
 }
 .modal .close:hover {
   color: #000;
+}
+
+/* Inline NCAS Poster Styling */
+.ncas-poster {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.ncas-poster iframe {
+  width: 100%;
+  height: 80vh;  /* taller preview */
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* NCAS list styling */
+.ncas-list {
+  list-style: disc inside;
+  padding-left: 1rem;
+}
+.ncas-list li {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Make NCAS card span full width for larger poster */
+.work-card#ncas-card {
+  grid-column: auto;
+}
+
+/* Dynamic typing overrides */
+.typing { display: none !important; }
+.intro { display: inline-block; }
+.typing-static, .typing-dynamic {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 2rem;
+  white-space: nowrap;
+}
+.typing-dynamic {
+  border-right: .1em solid #fff;
+  overflow: hidden;
+  min-width: 1ch;
 }

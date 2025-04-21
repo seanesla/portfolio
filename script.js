@@ -59,13 +59,19 @@
 })();
 
 // Theme toggle
-(function(){
+((function(){
   const btn = document.getElementById('toggle-theme');
   btn.addEventListener('click', () => {
-    document.documentElement.toggleAttribute('data-theme', 'dark');
-    btn.textContent = document.documentElement.hasAttribute('data-theme') ? '☀️' : '🌙';
+    const html = document.documentElement;
+    if (html.getAttribute('data-theme') === 'dark') {
+      html.removeAttribute('data-theme');
+      btn.textContent = '🌙';
+    } else {
+      html.setAttribute('data-theme', 'dark');
+      btn.textContent = '☀️';
+    }
   });
-})();
+})());
 
 // NCAS Poster Modal
 (function(){
@@ -92,3 +98,39 @@
   const egg = document.getElementById('easter-egg');
   trigger.addEventListener('click', () => egg.classList.toggle('hidden'));
 })();
+
+// Dynamic typing effect for hero section
+document.addEventListener('DOMContentLoaded', () => {
+  const dynamicSpan = document.querySelector('.typing-dynamic');
+  if(!dynamicSpan) return; // safety
+  const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+  let wordIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const typeSpeed = 150;
+  const deleteSpeed = 100;
+  const pause = 2000;
+
+  function type() {
+    const current = words[wordIndex];
+    if (!isDeleting) {
+      dynamicSpan.textContent = current.substring(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === current.length) {
+        isDeleting = true;
+        setTimeout(type, pause);
+        return;
+      }
+    } else {
+      dynamicSpan.textContent = current.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+      }
+    }
+    setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
+  }
+
+  type();
+});

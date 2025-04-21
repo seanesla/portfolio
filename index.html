@@ -6,133 +6,6 @@
   <title>Sean Esla - Math/CS Student & Pilot</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    :root { --accent: #FFD1BA; }
-    body {
-      margin: 0; padding: 0;
-      font-family: 'Inter', sans-serif;
-      color: #333; background: #fff;
-      cursor: none;
-    }
-    .custom-cursor {
-      position: fixed; top: 0; left: 0;
-      width: 12px; height: 12px;
-      border: 2px solid var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s ease;
-      z-index: 10000;
-    }
-    header {
-      position: sticky; top: 0;
-      background: #fff; padding: 1rem;
-      text-align: center; font-weight: 600;
-      border-bottom: 1px solid #eee;
-    }
-    .hero {
-      position: relative;
-      display: flex; align-items: center; justify-content: center;
-      height: 80vh;
-      background: url('https://source.unsplash.com/1600x900/?southern-california,beach') center/cover no-repeat;
-    }
-    .hero::after {
-      content: '';
-      position: absolute; bottom: 0; left: 0;
-      width: 100%; height: 80px;
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'><path fill='%23fff' d='M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z'/></svg>") no-repeat center bottom;
-      background-size: cover;
-    }
-    .intro { position: relative; color: #fff; font-size: 2rem; }
-    .typing { border-right: .1em solid #fff; white-space: nowrap; overflow: hidden; width: 0; animation: typing 2s steps(20) 1 forwards; }
-    @keyframes typing { from { width: 0; } to { width: 100%; } }
-    .projects {
-      display: flex; overflow-x: auto;
-      gap: 1rem; padding: 2rem 1rem;
-    }
-    .project {
-      flex: 0 0 300px; height: 200px;
-      background: #eee; border-radius: 8px;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .project.visible {
-      opacity: 1; transform: translateY(0);
-    }
-    .nav {
-      position: sticky; top: 0;
-      background: #fff; padding: 1rem;
-      text-align: center; font-weight: 600;
-      border-bottom: 1px solid #eee;
-    }
-    .nav ul {
-      list-style: none; margin: 0; padding: 0;
-      display: flex; justify-content: space-between;
-    }
-    .nav li {
-      margin-right: 20px;
-    }
-    .nav a {
-      text-decoration: none; color: #333;
-    }
-    .nav button {
-      background: none; border: none;
-      font-size: 1rem; cursor: pointer;
-    }
-    #about, #contact {
-      padding: 2rem;
-    }
-    #about h2, #contact h2 {
-      margin-top: 0;
-    }
-    footer {
-      background: #fff; padding: 1rem;
-      text-align: center; font-weight: 600;
-      border-top: 1px solid #eee;
-    }
-    #easter-egg {
-      display: none;
-    }
-    #easter-egg.hidden {
-      display: none;
-    }
-    .work-cards {
-      display: flex; gap: 1rem;
-    }
-    .work-card {
-      flex: 1;
-      background: #eee; padding: 1rem;
-      border-radius: 8px;
-    }
-    .work-card img {
-      width: 100%; height: 100px;
-      object-fit: cover; border-radius: 8px 8px 0 0;
-    }
-    .skills {
-      display: flex; flex-direction: column; gap: 1rem;
-    }
-    .skill-item {
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .bar {
-      width: 100%; height: 10px;
-      background: #ddd; border-radius: 10px;
-    }
-    .fill {
-      width: 0; height: 100%;
-      background: var(--accent); border-radius: 10px;
-      transition: width 0.5s ease;
-    }
-    .about-gallery {
-      display: flex; gap: 1rem;
-      margin-top: 2rem;
-    }
-    .about-gallery img {
-      width: 200px; height: 200px;
-      object-fit: cover; border-radius: 8px;
-      filter: brightness(0.85) saturate(0.9);
-    }
-  </style>
 </head>
 <body>
   <div id="progress"></div>
@@ -141,42 +14,48 @@
     <ul>
       <li><a href="#hero">Home</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#work">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><button id="toggle-theme">🌙</button></li>
     </ul>
   </nav>
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
-    <div class="intro"><span class="typing">Hi, I’m Sean Esla — Math & CS @ SMC. Pilot. NASA Intern.</span></div>
-  </section>
-  <section class="projects">
-    <div class="project"></div>
-    <div class="project"></div>
-    <div class="project"></div>
+    <div class="intro">
+      <span class="typing-static">Hi, I’m Sean Esla — Math &amp; CS @ SMC.</span>
+      <span class="typing-dynamic"></span>
+      <script>
+        // ensure inline span exists before external script loads in some browsers
+      </script>
+    </div>
   </section>
   <section id="about">
     <h2>About Me <span class="badge">✈️</span></h2>
     <p>I’m a Math & Computer Science student at Santa Monica College with internships at NASA’s NCAS Missions 1 & 2 and Caltech’s AT3 program. Skilled in Python, C++, and Java.</p>
     <div class="about-gallery">
-      <img src="imagesandpdfs/19E93611-3D07-4D74-BE69-E7272F5629CE_1_201_a.jpeg" alt="Sean at event">
+      <img src="imagesandpdfs/BBBDA9AD-0AD2-4586-B20D-CC95502DFE2B_1_105_c.jpeg" alt="Sean at event">
       <img src="imagesandpdfs/4C35D967-659D-4096-95AD-7FA1BC4B06B6_1_201_a.jpeg" alt="Sean in lab">
       <img src="imagesandpdfs/AB0AD7C5-8C1A-4439-9460-2746051D5D83_1_201_a.jpeg" alt="Sean flying">
     </div>
   </section>
-  <section id="work">
+  <section id="experience">
     <h2>Experience</h2>
     <div class="work-cards">
       <div class="work-card" id="ncas-card">
         <img src="logos/NASA-Logo-Large.png" alt="NASA Logo">
         <h3>NASA NCAS Missions 1 & 2</h3>
-        <p>Built telemetry analysis tools in Python for flight data.</p>
+        <ul class="ncas-list">
+          <li><strong>Mission 1:</strong> Analyzed supersonic flight advancements (like NASA's X‑59 sonic boom mitigation) and presented technical feasibility findings visually via an infographic.</li>
+          <li><strong>Mission 2:</strong> Resolved technical disagreements within a collaborative project by validating diverse viewpoints, using data‑driven analysis to justify design trade‑offs, and facilitating team consensus to balance competing priorities, ensuring successful project outcomes and forward momentum.</li>
+        </ul>
+        <div class="ncas-poster">
+          <iframe src="imagesandpdfs/NEW%20%20UPDATED%20POSTER.pdf" frameborder="0"></iframe>
+        </div>
       </div>
       <div class="work-card">
         <img src="logos/california-institute-of-technology-logo-png_seeklogo-310284-removebg-preview.png" alt="Caltech Logo">
-        <h3>Caltech AT3 Intern</h3>
-        <p>Maintained lab robotics and automation scripts in C++.</p>
+        <h3>Participant, Advanced Technology Technician Training (AT3)</h3>
+        <p>Nov 2024 – Mar 2025 • Completed online AT3 training covering cleanroom protocols, photolithography, and metrology.</p>
       </div>
     </div>
   </section>
@@ -203,17 +82,57 @@
     <p>LinkedIn: <a href="https://linkedin.com/in/sean-esla-470a67296/" target="_blank">linkedin.com/in/sean-esla-470a67296/</a></p>
   </section>
   <footer>
-    &copy; 2025 Your Name <span id="easter-trigger">🌴</span>
+    Made with love by Sean Esla <span id="easter-trigger">🌴</span>
     <div id="easter-egg" class="hidden">🏄 Surprise! Beach playlist: <a href="https://open.spotify.com/playlist/37i9dQZF1DX0SM0LYsMb51" target="_blank">Listen</a></div>
   </footer>
   <script defer src="script.js"></script>
-  <!-- NCAS Poster Modal -->
-  <div id="ncas-poster-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <iframe src="imagesandpdfs/NEW%20%20UPDATED%20POSTER.pdf" frameborder="0"></iframe>
-    </div>
-  </div>
+  <script>
+    // Typing animation effect
+    window.onload = function() {
+      const dynamicSpan = document.querySelector('.typing-dynamic');
+      if(!dynamicSpan) return;
+        
+      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      const typeSpeed = 150;
+      const deleteSpeed = 100;
+      const pauseDelay = 2000;
+      
+      function type() {
+        const currentWord = words[wordIndex];
+        
+        if(isDeleting) {
+          // Deleting animation
+          dynamicSpan.textContent = currentWord.substring(0, charIndex-1);
+          charIndex--;
+          
+          if(charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+          }
+          
+          setTimeout(type, deleteSpeed);
+        } else {
+          // Typing animation
+          dynamicSpan.textContent = currentWord.substring(0, charIndex+1);
+          charIndex++;
+          
+          if(charIndex === currentWord.length) {
+            isDeleting = true;
+            setTimeout(type, pauseDelay); // Pause at end of word
+            return;
+          }
+          
+          setTimeout(type, typeSpeed);
+        }
+      }
+      
+      // Start typing
+      type();
+    };
+  </script>
   <script>
     // Dynamic accent color by time
     const h = new Date().getHours();
