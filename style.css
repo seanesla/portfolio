@@ -76,6 +76,7 @@ header {
   border-bottom: 1px solid var(--accent);
   z-index: 1000;
   height: 4rem; /* Fixed height */
+  overflow: visible;
 }
 
 .nav-container {
@@ -83,22 +84,25 @@ header {
   align-items: center;
   justify-content: center; /* center the navigation */
   height: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   position: relative; /* for absolute positioning of logo */
 }
 
 .nav-brand {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-logo {
   height: 4.5rem; /* Much bigger */
   width: auto;
   display: block;
-  margin-left: 0.5rem;
+  margin: 0;
+  padding: 0;
 }
 
 .nav ul {
