@@ -368,15 +368,12 @@ footer {
   border-right: .1em solid #fff;
   overflow: hidden;
   min-width: 1ch;
+  /* solid cursor by default */
 }
 
-.typing-dynamic.blinking {
+/* Blinking state only when idle */
+.typing-dynamic.blink {
   animation: blink-caret 0.75s step-end infinite;
-}
-
-.typing-dynamic.typing {
-  animation: none;
-  border-right-color: #fff;
 }
 
 @keyframes blink-caret {

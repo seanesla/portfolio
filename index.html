@@ -103,15 +103,12 @@
       function type() {
         const currentWord = words[wordIndex];
         
-        // Handle blinking correctly
         if(charIndex === currentWord.length || charIndex === 0) {
-          // Waiting at beginning or end - BLINK
-          dynamicSpan.classList.add('blinking');
-          dynamicSpan.classList.remove('typing');
+          // Idle: add blink
+          dynamicSpan.classList.add('blink');
         } else {
-          // Actively typing - SOLID
-          dynamicSpan.classList.add('typing');
-          dynamicSpan.classList.remove('blinking');
+          // Typing: remove blink
+          dynamicSpan.classList.remove('blink');
         }
 
         if(isDeleting) {
@@ -141,7 +138,7 @@
       }
       
       // Start typing with blinking cursor initially
-      dynamicSpan.classList.add('blinking');
+      dynamicSpan.classList.add('blink');
       type();
     };
   </script>
