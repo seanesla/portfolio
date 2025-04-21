@@ -6,6 +6,7 @@
   <title>Sean Esla - Math/CS Student & Pilot</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
   <div id="progress"></div>
@@ -28,50 +29,72 @@
     <div class="hero-overlay"></div>
     <div class="intro">
       <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
-      <span class="typewriter-container">
-        <span class="typewriter-text"></span>
-        <span class="typewriter-cursor"></span>
-      </span>
-    </div>
-    <script>
-    // Simple, non-jittery typewriter effect
-    (function() {
-      // Fixed elements
-      const container = document.querySelector('.typewriter-container');
-      const text = document.querySelector('.typewriter-text');
-      const cursor = document.querySelector('.typewriter-cursor');
-      
-      // Words to cycle through
-      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
-      let wordIndex = 0;
-      
-      // Add a word with no animation, then remove it smoothly
-      function cycleWord() {
-        // Show the word instantly (no character-by-character)
-        text.textContent = words[wordIndex];
-        cursor.classList.add('typing');
-        
-        // Hold for 2 seconds
-        setTimeout(() => {
-          // Remove the word (no animation)
-          cursor.classList.remove('typing');
+      <span class="typing-dynamic"></span>
+      <script>
+        (function() {
+          // Typing effect - direct implementation
+          const typingElement = document.querySelector('.typing-dynamic');
+          const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+          let wordIndex = 0;
+          let charIndex = 0;
+          let isDeleting = false;
+
+          // Initialize
+          typingElement.textContent = '';
+          console.log('Starting inline typing effect');
           
-          // Wait 1 second with blinking cursor
-          setTimeout(() => {
-            // Clear and move to next word
-            text.textContent = '';
-            wordIndex = (wordIndex + 1) % words.length;
+          function typeLoop() {
+            const currentWord = words[wordIndex];
             
-            // Start next cycle after a pause
-            setTimeout(cycleWord, 500);
-          }, 1000);
-        }, 2000);
-      }
-      
-      // Start the cycle
-      setTimeout(cycleWord, 500);
-    })();
-    </script>
+            // Update text based on typing direction
+            if (isDeleting) {
+              // Deleting
+              typingElement.textContent = currentWord.substring(0, charIndex);
+              charIndex--;
+              
+              // Control cursor - solid while typing/deleting
+              typingElement.classList.add('typing');
+              
+              // When word is fully deleted
+              if (charIndex < 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                charIndex = 0;
+                
+                // Remove typing class to make cursor blink during pause
+                typingElement.classList.remove('typing');
+                
+                setTimeout(typeLoop, 500); // Pause before typing next word
+              } else {
+                setTimeout(typeLoop, 80); // Delete speed
+              }
+            } else {
+              // Typing
+              typingElement.textContent = currentWord.substring(0, charIndex + 1);
+              charIndex++;
+              
+              // Control cursor - solid while typing
+              typingElement.classList.add('typing');
+              
+              // When word is fully typed
+              if (charIndex >= currentWord.length) {
+                isDeleting = true;
+                
+                // Remove typing class to make cursor blink during pause
+                typingElement.classList.remove('typing');
+                
+                setTimeout(typeLoop, 1500); // Pause at end of word
+              } else {
+                setTimeout(typeLoop, 120); // Type speed
+              }
+            }
+          }
+          
+          // Start typing loop immediately
+          typeLoop();
+        })();
+      </script>
+    </div>
   </section>
   <section id="about">
     <h2>About Me <span class="badge">✈️</span></h2>
@@ -132,7 +155,6 @@
     Made with love by Sean Esla <span id="easter-trigger">🌴</span>
     <div id="easter-egg" class="hidden">🏄 Surprise! Beach playlist: <a href="https://open.spotify.com/playlist/37i9dQZF1DX0SM0LYsMb51" target="_blank">Listen</a></div>
   </footer>
-  <script defer src="script.js"></script>
   <script>
     // Dynamic accent color by time
     const h = new Date().getHours();

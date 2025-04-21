@@ -408,8 +408,8 @@ footer {
 }
 
 /* Dynamic typing overrides */
-.typing { display: none !important; }
 .intro { display: inline-block; }
+
 .typing-static, .typing-dynamic {
   position: relative;
   z-index: 1;
@@ -447,6 +447,36 @@ footer {
   animation: none;
 }
 
+@keyframes blink-caret {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Typing effect with separated cursor */
+.typing-dynamic {
+  position: relative;
+  display: inline-block;
+}
+
+/* Add cursor as pseudo-element so it's separate from text */
+.typing-dynamic::after {
+  content: '';
+  position: absolute;
+  right: -0.1em;
+  top: 0;
+  height: 100%;
+  width: 0.1em;
+  background-color: #fff;
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+/* When typing, cursor should be solid */
+.typing-dynamic.typing::after {
+  animation: none;
+  opacity: 1;
+}
+
+/* Redefine blink animation */
 @keyframes blink-caret {
   from, to { opacity: 1; }
   50% { opacity: 0; }
