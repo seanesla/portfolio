@@ -28,87 +28,76 @@
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
     <div class="intro">
-      <div>Hi, I'm Sean Esla — Math &amp; CS @ SMC. <span id="typed-element"></span></div>
+      <div class="static-text">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</div>
+      <div class="typing-container">
+        <span id="typing-text"></span><span class="cursor">&nbsp;</span>
+      </div>
     </div>
-    
-    <!-- Simple but reliable typing implementation -->
-    <script>
-      // Wait for the page to be fully loaded
-      document.addEventListener('DOMContentLoaded', function() {
-        const element = document.getElementById('typed-element');
-        const phrases = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
-        let currentPhrase = 0;
-        let currentChar = 0;
-        let isDeleting = false;
-        let isWaiting = false;
-        
-        // Make sure element exists before proceeding
-        if (!element) {
-          console.error('Typed element not found');
-          return;
-        }
-        
-        // Cursor element
-        const cursor = document.createElement('span');
-        cursor.textContent = '|';
-        cursor.className = 'cursor';
-        element.parentNode.insertBefore(cursor, element.nextSibling);
-        
-        // Type one character at a time
-        function typeCharacter() {
-          // Current phrase being typed
-          const phrase = phrases[currentPhrase];
-          
-          // If waiting, just return and the timeout will handle it
-          if (isWaiting) return;
-          
-          // Adding or removing characters
-          if (isDeleting) {
-            // Remove a character
-            element.textContent = phrase.substring(0, currentChar - 1);
-            currentChar--;
-            
-            // When fully deleted
-            if (currentChar === 0) {
-              isDeleting = false;
-              currentPhrase = (currentPhrase + 1) % phrases.length;
-              isWaiting = true;
-              setTimeout(function() {
-                isWaiting = false;
-                typeCharacter();
-              }, 500);
-            } else {
-              setTimeout(typeCharacter, 50);
-            }
-          } else {
-            // Add a character
-            element.textContent = phrase.substring(0, currentChar + 1);
-            currentChar++;
-            
-            // When fully typed
-            if (currentChar === phrase.length) {
-              isWaiting = true;
-              isDeleting = true;
-              setTimeout(function() {
-                isWaiting = false;
-                typeCharacter();
-              }, 1500);
-            } else {
-              setTimeout(typeCharacter, 100);
-            }
-          }
-        }
-        
-        // Start typing
-        setTimeout(typeCharacter, 500);
-        
-        // Cursor blink animation
-        setInterval(function() {
-          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
-        }, 500);
-      });
-    </script>
   </section>
+  
+  <!-- Extremely simple and reliable typing implementation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Typed elements
+      const typingText = document.getElementById('typing-text');
+      const cursor = document.querySelector('.cursor');
+      
+      // Words to display
+      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.']; 
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      
+      function type() {
+        // Current word being typed/deleted
+        const currentWord = words[wordIndex];
+        
+        // Set typing text
+        typingText.textContent = currentWord.substring(0, charIndex);
+        
+        // Manage cursor (solid during typing/deleting, blinking during pauses)
+        if (isDeleting || charIndex < currentWord.length) {
+          cursor.style.opacity = '1';
+          cursor.classList.add('typing');
+        } else {
+          cursor.classList.remove('typing');
+        }
+        
+        // Typing logic
+        if (!isDeleting && charIndex < currentWord.length) {
+          // Still typing current word
+          charIndex++;
+          setTimeout(type, 150);
+        } 
+        else if (!isDeleting && charIndex === currentWord.length) {
+          // Finished typing current word - pause before deleting
+          isDeleting = true;
+          setTimeout(type, 1500);
+        }
+        else if (isDeleting && charIndex > 0) {
+          // Deleting current word
+          charIndex--;
+          setTimeout(type, 80);
+        }
+        else if (isDeleting && charIndex === 0) {
+          // Finished deleting - move to next word
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          setTimeout(type, 500);
+        }
+      }
+      
+      // Start typing animation
+      setTimeout(type, 1000);
+      
+      // Separate cursor blink logic
+      setInterval(function() {
+        if (!cursor.classList.contains('typing')) {
+          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+        }
+      }, 500);
+    });
+  </script>
   <section id="about">
     <h2>About Me <span class="badge">✈️</span></h2>
     <p>I’m a Math & Computer Science student at Santa Monica College with internships at NASA’s NCAS Missions 1 & 2 and Caltech’s AT3 program. Skilled in Python, C++, and Java.</p>
