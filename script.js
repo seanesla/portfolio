@@ -111,16 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const deleteSpeed = 100;
   const pause = 2000;
 
-  // Start with blinking cursor while idle
-  dynamicSpan.classList.add('blink');
-
   function type() {
     const current = words[wordIndex];
-    // Control cursor: blink only when idle
-    if(charIndex === 0 || (!isDeleting && charIndex === current.length)) {
-      dynamicSpan.classList.add('blink');
+    // Toggle 'typing' to pause blink while typing
+    if (charIndex === 0 || (!isDeleting && charIndex === current.length)) {
+      dynamicSpan.classList.remove('typing');
     } else {
-      dynamicSpan.classList.remove('blink');
+      dynamicSpan.classList.add('typing');
     }
     if (!isDeleting) {
       dynamicSpan.textContent = current.substring(0, charIndex + 1);

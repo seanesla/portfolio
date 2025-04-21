@@ -368,12 +368,11 @@ footer {
   border-right: .1em solid #fff;
   overflow: hidden;
   min-width: 1ch;
-  /* solid cursor by default */
+  animation: blink-caret 0.75s step-end infinite;
 }
 
-/* Blinking state only when idle */
-.typing-dynamic.blink {
-  animation: blink-caret 0.75s step-end infinite;
+.typing-dynamic.typing {
+  animation: none;
 }
 
 @keyframes blink-caret {

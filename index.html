@@ -87,62 +87,6 @@
   </footer>
   <script defer src="script.js"></script>
   <script>
-    // Typing animation effect
-    window.onload = function() {
-      const dynamicSpan = document.querySelector('.typing-dynamic');
-      if(!dynamicSpan) return;
-        
-      const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
-      let wordIndex = 0;
-      let charIndex = 0;
-      let isDeleting = false;
-      const typeSpeed = 150;
-      const deleteSpeed = 100;
-      const pauseDelay = 2000;
-      
-      function type() {
-        const currentWord = words[wordIndex];
-        
-        if(charIndex === currentWord.length || charIndex === 0) {
-          // Idle: add blink
-          dynamicSpan.classList.add('blink');
-        } else {
-          // Typing: remove blink
-          dynamicSpan.classList.remove('blink');
-        }
-
-        if(isDeleting) {
-          // Deleting animation
-          dynamicSpan.textContent = currentWord.substring(0, charIndex-1);
-          charIndex--;
-          
-          if(charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-          }
-          
-          setTimeout(type, deleteSpeed);
-        } else {
-          // Typing animation
-          dynamicSpan.textContent = currentWord.substring(0, charIndex+1);
-          charIndex++;
-          
-          if(charIndex === currentWord.length) {
-            isDeleting = true;
-            setTimeout(type, pauseDelay); // Pause at end of word
-            return;
-          }
-          
-          setTimeout(type, typeSpeed);
-        }
-      }
-      
-      // Start typing with blinking cursor initially
-      dynamicSpan.classList.add('blink');
-      type();
-    };
-  </script>
-  <script>
     // Dynamic accent color by time
     const h = new Date().getHours();
     const root = document.documentElement;
