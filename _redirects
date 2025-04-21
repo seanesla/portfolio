@@ -1,0 +1,5 @@
+# Redirect any non-existent routes to the main page
+/* /index.html 200
+
+# Handle the old filename if anyone has it bookmarked
+/portfolio_fixed.html /index.html 301
