@@ -103,11 +103,13 @@
       function type() {
         const currentWord = words[wordIndex];
         
-        // Control cursor blinking - only when idle
+        // We'll handle the blinking with a solid cursor during typing and deletion
         if(charIndex === currentWord.length || charIndex === 0) {
-          dynamicSpan.classList.add('blinking-cursor');
+          // Waiting at start or end - let the CSS animation handle blinking
+          dynamicSpan.style.borderRightColor = ''; // Use default CSS animation
         } else {
-          dynamicSpan.classList.remove('blinking-cursor');
+          // Actively typing - solid cursor
+          dynamicSpan.style.borderRightColor = '#fff';
         }
 
         if(isDeleting) {
