@@ -417,28 +417,37 @@ footer {
   color: #fff;
   font-size: 2rem;
   white-space: nowrap;
-}
-.typing-dynamic {
-  border-right: .1em solid #fff;
-  overflow: hidden;
   display: inline-block;
-  min-width: 1ch;
-  animation: blink-caret 0.75s step-end infinite;
+  vertical-align: bottom;
+}
+
+.typewriter-container {
+  display: inline-block;
   position: relative;
 }
 
-.typing-dynamic.typing {
+.typewriter-text {
+  position: relative;
+  display: inline;
+  color: #fff;
+}
+
+.typewriter-cursor {
+  position: absolute;
+  right: -0.1em;
+  top: 0;
+  bottom: 0;
+  width: 0.1em;
+  background-color: #fff;
+  display: inline-block;
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+.typewriter-cursor.typing {
   animation: none;
-  border-right-color: #fff;
 }
 
 @keyframes blink-caret {
-  from, to { border-right-color: #fff; }
-  50% { border-right-color: transparent; }
-}
-
-/* Add this to prevent layout shifts during typing */
-.typing-static, .typing-dynamic {
-  display: inline-block;
-  vertical-align: bottom;
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
 }

@@ -27,70 +27,49 @@
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
     <div class="intro">
-      <span class="typing-static">Hi, I’m Sean Esla — Math &amp; CS @ SMC.</span>
-      <span class="typing-dynamic"></span>
+      <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
+      <span class="typewriter-container">
+        <span class="typewriter-text"></span>
+        <span class="typewriter-cursor"></span>
+      </span>
     </div>
     <script>
-    // Smooth typing animation with fixed width container
+    // Simple, non-jittery typewriter effect
     (function() {
-      const typingSpan = document.querySelector('.typing-dynamic');
+      // Fixed elements
+      const container = document.querySelector('.typewriter-container');
+      const text = document.querySelector('.typewriter-text');
+      const cursor = document.querySelector('.typewriter-cursor');
+      
+      // Words to cycle through
       const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
       let wordIndex = 0;
-      let charIndex = 0;
-      let isDeleting = false;
       
-      // Pre-calculate the max width needed - prevents layout shifts
-      const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, '');
-      typingSpan.style.minWidth = '0';
-      
-      function type() {
-        const current = words[wordIndex];
+      // Add a word with no animation, then remove it smoothly
+      function cycleWord() {
+        // Show the word instantly (no character-by-character)
+        text.textContent = words[wordIndex];
+        cursor.classList.add('typing');
         
-        // Typing animation
-        if (!isDeleting) {
-          typingSpan.textContent = current.substring(0, charIndex + 1);
-          charIndex++;
+        // Hold for 2 seconds
+        setTimeout(() => {
+          // Remove the word (no animation)
+          cursor.classList.remove('typing');
           
-          // Solid cursor while typing
-          typingSpan.classList.add('typing');
-          
-          // Word complete
-          if (charIndex === current.length) {
-            isDeleting = true;
-            typingSpan.classList.remove('typing'); // blinking at end
-            setTimeout(type, 2000); // Longer pause at end for readability
-            return;
-          }
-          
-          // Consistent timing prevents stutters
-          setTimeout(type, 180); // Slightly slower for smoothness
-        } 
-        // Deleting animation
-        else { 
-          typingSpan.textContent = current.substring(0, charIndex);
-          charIndex--;
-          
-          // Solid cursor while deleting
-          typingSpan.classList.add('typing');
-          
-          // Fully deleted
-          if (charIndex === 0) {
-            isDeleting = false;
+          // Wait 1 second with blinking cursor
+          setTimeout(() => {
+            // Clear and move to next word
+            text.textContent = '';
             wordIndex = (wordIndex + 1) % words.length;
-            typingSpan.classList.remove('typing'); // blinking between words
-            setTimeout(type, 500); // Pause before next word
-            return;
-          }
-          
-          // Delete at consistent pace
-          setTimeout(type, 100); // Slightly slower deleting for smoothness
-        }
+            
+            // Start next cycle after a pause
+            setTimeout(cycleWord, 500);
+          }, 1000);
+        }, 2000);
       }
       
-      // Start clean with empty text
-      typingSpan.textContent = '';
-      typingSpan.classList.remove('typing');
-      setTimeout(type, 1000); // Longer initial delay to let page settle
+      // Start the cycle
+      setTimeout(cycleWord, 500);
     })();
     </script>
   </section>
