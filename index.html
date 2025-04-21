@@ -103,13 +103,15 @@
       function type() {
         const currentWord = words[wordIndex];
         
-        // We'll handle the blinking with a solid cursor during typing and deletion
+        // Handle blinking correctly
         if(charIndex === currentWord.length || charIndex === 0) {
-          // Waiting at start or end - let the CSS animation handle blinking
-          dynamicSpan.style.borderRightColor = ''; // Use default CSS animation
+          // Waiting at beginning or end - BLINK
+          dynamicSpan.classList.add('blinking');
+          dynamicSpan.classList.remove('typing');
         } else {
-          // Actively typing - solid cursor
-          dynamicSpan.style.borderRightColor = '#fff';
+          // Actively typing - SOLID
+          dynamicSpan.classList.add('typing');
+          dynamicSpan.classList.remove('blinking');
         }
 
         if(isDeleting) {
@@ -138,7 +140,8 @@
         }
       }
       
-      // Start typing
+      // Start typing with blinking cursor initially
+      dynamicSpan.classList.add('blinking');
       type();
     };
   </script>
