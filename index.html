@@ -28,63 +28,37 @@
   <section id="hero" class="hero">
     <div class="hero-overlay"></div>
     <div class="intro">
-      <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
-      <span class="typing-dynamic"></span>
-      <script>
-        (function() {
-          // Simplified typing effect
-          const typingElement = document.querySelector('.typing-dynamic');
-          const words = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
-          
-          // Pre-calculate max width to avoid layout shifts
-          const longestWord = words.reduce((a, b) => a.length > b.length ? a : b);
-          typingElement.style.width = `${longestWord.length}ch`;
-          
-          let wordIndex = 0;
-          let charIndex = 0;
-          let isDeleting = false;
-
-          // Clear initial content
-          typingElement.textContent = '';
-          
-          function typeLoop() {
-            const currentWord = words[wordIndex];
-            
-            // Always add solid cursor during activity
-            if (charIndex > 0 && (charIndex < currentWord.length || isDeleting)) {
-              typingElement.classList.add('typing');
-            } else {
-              typingElement.classList.remove('typing');
-            }
-            
-            // Update text content
-            typingElement.textContent = currentWord.substring(0, charIndex);
-            
-            if (isDeleting) {
-              charIndex--;
-              if (charIndex === 0) {
-                isDeleting = false;
-                wordIndex = (wordIndex + 1) % words.length;
-                setTimeout(typeLoop, 700); // Pause between words
-                return;
-              }
-              setTimeout(typeLoop, 80); // Delete speed
-            } else {
-              charIndex++;
-              if (charIndex > currentWord.length) {
-                isDeleting = true;
-                setTimeout(typeLoop, 1500); // Pause at end of word
-                return;
-              }
-              setTimeout(typeLoop, 150); // Type speed
-            }
-          }
-          
-          // Start with a slight delay
-          setTimeout(typeLoop, 300);
-        })();
-      </script>
+      <div class="typing-container">
+        <span class="typing-static">Hi, I'm Sean Esla — Math &amp; CS @ SMC.</span>
+        <div class="role-container">
+          <span id="role">Pilot.</span><span class="cursor">|</span>
+        </div>
+      </div>
     </div>
+    
+    <script>
+      (function() {
+        // Very simple role switcher
+        const roles = ['Pilot.', 'NCAS Alum.', 'AT3 Participant.'];
+        const roleElement = document.getElementById('role');
+        const cursor = document.querySelector('.cursor');
+        let roleIndex = 0;
+        
+        // Start with first role
+        roleElement.textContent = roles[0];
+        
+        // Simple blink effect for cursor
+        setInterval(() => {
+          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+        }, 500);
+        
+        // Change roles every 3 seconds
+        setInterval(() => {
+          roleIndex = (roleIndex + 1) % roles.length;
+          roleElement.textContent = roles[roleIndex];
+        }, 3000);
+      })();
+    </script>
   </section>
   <section id="about">
     <h2>About Me <span class="badge">✈️</span></h2>

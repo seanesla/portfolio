@@ -452,48 +452,40 @@ footer {
   50% { opacity: 0; }
 }
 
-/* Stable typing container */
-.intro {
+/* Clean, minimalist typing animation container */
+.typing-container {
   display: flex;
-  align-items: baseline;
   flex-wrap: wrap;
+  align-items: baseline;
   position: relative;
   z-index: 2;
 }
 
-.typing-static, .typing-dynamic {
-  margin-right: 0.25em;
+.typing-static {
+  margin-right: 0.5rem;
 }
 
-/* Typing effect with stable cursor */
-.typing-dynamic {
-  position: relative;
+.role-container {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+/* Simple blinking cursor */
+.cursor {
   display: inline-block;
-  min-width: 2ch; /* Minimum width to prevent layout shifts */
-  min-height: 1.2em;
-  vertical-align: baseline;
+  color: #fff; 
+  font-weight: bold;
+  margin-left: 2px; 
+  animation: blink 1s step-end infinite;
 }
 
-/* Fixed width cursor to prevent movement */
-.typing-dynamic::after {
-  content: '';
-  position: absolute;
-  right: -3px;
-  top: 10%; 
-  bottom: 10%;
-  width: 2px;
-  background-color: #fff;
-  animation: blink-caret 0.75s step-end infinite;
-}
-
-/* Solid cursor when typing */
-.typing-dynamic.typing::after {
-  animation: none;
-  opacity: 1;
-}
-
-/* Redefined blink animation */
-@keyframes blink-caret {
+@keyframes blink {
   from, to { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* Role text styling */
+#role {
+  color: #fff;
+  display: inline-block;
 }
