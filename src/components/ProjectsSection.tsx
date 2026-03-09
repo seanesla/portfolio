@@ -174,7 +174,7 @@ export default function ProjectsSection() {
         <div
           ref={mediaRef}
           className="absolute top-4 left-0 right-0 z-[5] pointer-events-none flex items-center justify-center"
-          style={{ height: isMobile ? '35vh' : '50vh' }}
+          style={{ height: isMobile ? '45vh' : '50vh' }}
         >
           {currentProject?.media && (
             <ProjectMedia key={activeIndex} project={currentProject} />
@@ -186,7 +186,7 @@ export default function ProjectsSection() {
           <div
             key={project.id}
             ref={(el) => { cardsRef.current[i] = el }}
-            className="absolute inset-0 flex items-end justify-center pb-10"
+            className="absolute inset-0 flex items-end justify-center pb-6 md:pb-10"
             style={{ zIndex: i + 1 }}
           >
             <div className="w-full max-w-[1100px] px-6">

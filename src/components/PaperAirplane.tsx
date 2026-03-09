@@ -27,30 +27,56 @@ Object.values(FRAMES).forEach((src) => {
 /** Measure the "Sean Esla" text and return the plane's center-point in
  *  viewport pixels (for use with position:fixed + translate(-50%,-50%)).
  *  Desktop: to the left of the first character, vertically centered.
- *  Mobile:  above the text, horizontally centered. */
+ *  Mobile:  above the text, horizontally centered.
+ *
+ *  Compensates for any GSAP scale transform on .hero-content so that
+ *  getBoundingClientRect() values are "unscaled" to true layout coords. */
 function getParkPos(scale: number) {
-  // BlurText renders the "Sean Esla" heading as the first child of .hero-content
-  const container = document.querySelector('.hero-content')?.firstElementChild
+  const heroContent = document.querySelector('.hero-content')
+  const container = heroContent?.firstElementChild
   if (!container) {
     return { left: window.innerWidth * 0.3, top: window.innerHeight * 0.4 }
   }
+
   const rect = container.getBoundingClientRect()
+  let left = rect.left
+  let top = rect.top
+  let width = rect.width
+  let height = rect.height
+
+  // If .hero-content is scaled (e.g. iris-wipe sets scale 0.95), the rect
+  // from getBoundingClientRect() reflects the *visual* (transformed) size.
+  // Reverse the scale around .hero-content's center to get true layout coords.
+  if (heroContent) {
+    const parentScale = Number(gsap.getProperty(heroContent, 'scaleX')) || 1
+    if (parentScale !== 1 && parentScale > 0) {
+      const parentRect = (heroContent as HTMLElement).getBoundingClientRect()
+      const cx = parentRect.left + parentRect.width / 2
+      const cy = parentRect.top + parentRect.height / 2
+      // Undo scale: map visual coords back to unscaled layout coords
+      left = cx + (left - cx) / parentScale
+      top = cy + (top - cy) / parentScale
+      width = width / parentScale
+      height = height / parentScale
+    }
+  }
+
   const isMobile = window.innerWidth < 768
   const renderedW = 120 * scale
   const renderedH = 80 * scale
 
   if (isMobile) {
     return {
-      left: rect.left + rect.width / 2,
-      top: rect.top - 12 - renderedH / 2,
+      left: left + width / 2,
+      top: top - 12 - renderedH / 2,
     }
   }
 
   // Desktop: park just to the left of the text, vertically centered
   const gap = 10
   return {
-    left: rect.left - gap - renderedW / 2,
-    top: rect.top + rect.height / 2,
+    left: left - gap - renderedW / 2,
+    top: top + height / 2,
   }
 }
 
@@ -67,7 +93,7 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
   }
   const idleTweenRef = useRef<gsap.core.Tween | null>(null)
   const parkPosRef = useRef({ left: 0, top: 0 })
-  const recalcTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const scaleRef = useRef(window.innerWidth < 768 ? 0.4 : 0.6)
 
   const startIdleBob = (el: HTMLElement) => {
     stopIdleBob()
@@ -93,6 +119,7 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
     if (!el) return
     const isMobile = window.innerWidth < 768
     const scale = isMobile ? 0.4 : 0.6
+    scaleRef.current = scale
     gsap.set(el, {
       top: '-15%',
       left: isMobile ? '70%' : '80%',
@@ -110,6 +137,7 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
     if (!el) return
     const isMobile = window.innerWidth < 768
     const scale = isMobile ? 0.4 : 0.6
+    scaleRef.current = scale
 
     setFrame('turnLeft')
     const flyTweenRef = { current: null as gsap.core.Tween | null }
@@ -135,7 +163,10 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
             if (this.progress() > 0.85) setFrame('turnLeft')
           },
           onComplete: () => {
-            parkPosRef.current = getParkPos(scale)
+            // Re-measure (fonts may have loaded during flight) and snap
+            const corrected = getParkPos(scale)
+            parkPosRef.current = corrected
+            gsap.set(el, { left: corrected.left, top: corrected.top })
             setEntered(true)
             setFrame('turnLeft')
             startIdleBob(el)
@@ -149,19 +180,22 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
     }
   }, [started])
 
-  // Resize handler — reposition when parked
+  // Resize handler — always update cached park position; visually reposition only when bobbing
   useEffect(() => {
     if (!entered) return
     const el = airplaneRef.current
     if (!el) return
 
     const onResize = () => {
-      if (!idleTweenRef.current) return // only when parked/bobbing
       const isMobile = window.innerWidth < 768
       const scale = isMobile ? 0.4 : 0.6
+      scaleRef.current = scale
       const park = getParkPos(scale)
       parkPosRef.current = park
-      gsap.set(el, { left: park.left, top: park.top })
+      // Only visually reposition if currently bobbing (parked in hero)
+      if (idleTweenRef.current) {
+        gsap.set(el, { left: park.left, top: park.top, scale })
+      }
     }
 
     window.addEventListener('resize', onResize)
@@ -173,8 +207,6 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
     if (!entered) return
     const el = airplaneRef.current
     if (!el) return
-    const isMobile = window.innerWidth < 768
-    const scale = isMobile ? 0.4 : 0.6
 
     // Hero → Life Section transition
     const heroToLife = ScrollTrigger.create({
@@ -182,6 +214,15 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       start: 'top top',
       end: '+=100%',
       scrub: 0.5,
+      invalidateOnRefresh: true,
+
+      onRefresh: () => {
+        const scale = scaleRef.current
+        parkPosRef.current = getParkPos(scale)
+        if (idleTweenRef.current && el) {
+          gsap.set(el, { left: parkPosRef.current.left, top: parkPosRef.current.top })
+        }
+      },
 
       onLeave: () => {
         // Fires immediately at boundary — guarantees airplane is hidden
@@ -191,21 +232,18 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       },
 
       onEnterBack: () => {
-        // Recalculate park position once when scrolling back into hero range.
-        // Delayed recalc lets the iris-wipe snap (0.2–0.4s) settle first.
-        const recalc = () => {
-          parkPosRef.current = getParkPos(scale)
-          if (idleTweenRef.current && el) {
-            gsap.set(el, { top: parkPosRef.current.top, left: parkPosRef.current.left })
-          }
+        // getParkPos() now compensates for .hero-content scale transforms,
+        // so a single recalc is sufficient — no delayed hack needed.
+        const scale = scaleRef.current
+        parkPosRef.current = getParkPos(scale)
+        if (idleTweenRef.current && el) {
+          gsap.set(el, { top: parkPosRef.current.top, left: parkPosRef.current.left, y: 0 })
         }
-        recalc()
-        if (recalcTimerRef.current) clearTimeout(recalcTimerRef.current)
-        recalcTimerRef.current = setTimeout(recalc, 500)
       },
 
       onLeaveBack: () => {
         // Safety net: user scrolled above trigger start — ensure airplane is parked
+        const scale = scaleRef.current
         const park = parkPosRef.current
         if (!idleTweenRef.current) {
           setFrame('turnLeft')
@@ -217,10 +255,12 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       onUpdate: (self) => {
         const p = self.progress
         const dir = self.direction  // 1 = down, -1 = up
+        const scale = scaleRef.current
 
         if (p < 0.02) {
           if (!idleTweenRef.current) {
-            const park = parkPosRef.current
+            const park = getParkPos(scale)   // fresh measurement every park cycle
+            parkPosRef.current = park         // update cache for exit animation
             setFrame('turnLeft')
             gsap.set(el, {
               top: park.top,
@@ -262,7 +302,6 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
     return () => {
       heroToLife.kill()
       stopIdleBob()
-      if (recalcTimerRef.current) clearTimeout(recalcTimerRef.current)
     }
   }, [entered])
 

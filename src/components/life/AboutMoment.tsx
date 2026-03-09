@@ -74,9 +74,9 @@ export default function AboutMoment() {
 
   return (
     <div ref={sectionRef} data-nav-id="about" className="relative h-[1px] overflow-visible">
-      <div ref={innerRef} className="h-screen flex flex-col md:flex-row items-center relative z-[2]">
+      <div ref={innerRef} className="h-screen flex flex-col md:flex-row items-center justify-center md:justify-start gap-[2vh] md:gap-0 relative z-[2]">
       {/* Video — bleeds left */}
-      <div ref={photoRef} className="relative w-[85vw] h-[35vh] md:absolute md:left-[5vw] md:top-1/2 md:-translate-y-1/2 md:w-[42vw] md:h-[55vh] overflow-hidden rounded-2xl mt-[10vh] md:mt-0">
+      <div ref={photoRef} className="relative w-[85vw] h-[35vh] md:absolute md:left-[5vw] md:top-1/2 md:-translate-y-1/2 md:w-[42vw] md:h-[55vh] overflow-hidden rounded-2xl md:mt-0">
         <video
           ref={videoRef}
           className="w-full h-full object-cover rounded-2xl"

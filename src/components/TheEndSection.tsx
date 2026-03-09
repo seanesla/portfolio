@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 import ASCIIText from './ui/ASCIIText'
 import BlurText from './ui/BlurText'
 import CityOverlays from './ui/CityOverlays'
 
 export default function TheEndSection() {
+  const isMobile = useIsMobile()
   const blurRef = useRef<HTMLDivElement>(null)
   const [blurVisible, setBlurVisible] = useState(false)
   const cityRef = useRef<HTMLDivElement>(null)
@@ -48,9 +50,9 @@ export default function TheEndSection() {
         className="h-[60vh]"
         style={{
           background: `linear-gradient(to bottom,
-            rgba(6, 11, 24, 0) 0%,
-            rgba(6, 11, 24, 0.3) 15%,
-            rgba(6, 11, 24, 0.7) 35%,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.3) 15%,
+            rgba(0, 0, 0, 0.7) 35%,
             rgba(0, 0, 0, 0.9) 65%,
             #000000 100%
           )`,
@@ -61,7 +63,11 @@ export default function TheEndSection() {
       <div className="relative z-10 h-[15vh] bg-black">
         {/* Inner wrapper is taller so ASCII text renders large, but parent clips layout height */}
         <div className="absolute inset-x-0 top-0 h-[50vh] pointer-events-auto">
-          <ASCIIText text="the end" />
+          <ASCIIText
+            text="the end"
+            planeBaseHeight={isMobile ? 5 : 8}
+            asciiFontSize={isMobile ? 6 : 8}
+          />
         </div>
         <div
           ref={blurRef}
@@ -96,11 +102,11 @@ export default function TheEndSection() {
             }}
           />
         )}
-        <div className="relative overflow-hidden max-h-[70vh]">
+        <div className="relative overflow-hidden h-[50vh] md:h-auto md:max-h-[70vh]">
           <img
             src="/media/cityatbottomofwebsitepage.png"
             alt=""
-            className="w-full block"
+            className="w-full block h-full object-cover object-top md:h-auto md:object-[unset]"
           />
           <CityOverlays visible={cityVisible} />
         </div>

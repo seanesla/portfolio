@@ -128,7 +128,7 @@ export default function App() {
         })
       }
 
-      // --- Void overlay: darken body bg from #060b18 → black as TheEnd approaches ---
+      // --- Void overlay: fade background layers to black as TheEnd approaches ---
       if (endSection && voidRef.current) {
         gsap.to(voidRef.current, {
           opacity: 1,
