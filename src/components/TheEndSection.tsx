@@ -47,7 +47,7 @@ export default function TheEndSection() {
     <section data-end-section>
       {/* Dark void gradient spacer */}
       <div
-        className="h-[60vh]"
+        className="h-[200vh]"
         style={{
           background: `linear-gradient(to bottom,
             rgba(0, 0, 0, 0) 0%,

@@ -92,6 +92,7 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
     if (imgRef.current) imgRef.current.src = FRAMES[key]
   }
   const idleTweenRef = useRef<gsap.core.Tween | null>(null)
+  const hiddenRef = useRef(false)
   const parkPosRef = useRef({ left: 0, top: 0 })
   const scaleRef = useRef(window.innerWidth < 768 ? 0.4 : 0.6)
 
@@ -213,7 +214,7 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       trigger: document.querySelector('.hero-content'),
       start: 'top top',
       end: '+=100%',
-      scrub: 0.5,
+      scrub: true,
       invalidateOnRefresh: true,
 
       onRefresh: () => {
@@ -225,15 +226,13 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       },
 
       onLeave: () => {
-        // Fires immediately at boundary — guarantees airplane is hidden
-        // even if scrub hasn't caught up (prevents flash in AboutMoment)
+        hiddenRef.current = true
         stopIdleBob()
         gsap.set(el, { left: '-20%', top: '120%', opacity: 0, y: 0 })
       },
 
       onEnterBack: () => {
-        // getParkPos() now compensates for .hero-content scale transforms,
-        // so a single recalc is sufficient — no delayed hack needed.
+        hiddenRef.current = false
         const scale = scaleRef.current
         parkPosRef.current = getParkPos(scale)
         if (idleTweenRef.current && el) {
@@ -242,7 +241,7 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       },
 
       onLeaveBack: () => {
-        // Safety net: user scrolled above trigger start — ensure airplane is parked
+        hiddenRef.current = false
         const scale = scaleRef.current
         const park = parkPosRef.current
         if (!idleTweenRef.current) {
@@ -253,11 +252,13 @@ export default function PaperAirplane({ started = false }: { started?: boolean }
       },
 
       onUpdate: (self) => {
+        if (hiddenRef.current) return
         const p = self.progress
         const dir = self.direction  // 1 = down, -1 = up
         const scale = scaleRef.current
 
         if (p < 0.02) {
+          hiddenRef.current = false
           if (!idleTweenRef.current) {
             const park = getParkPos(scale)   // fresh measurement every park cycle
             parkPosRef.current = park         // update cache for exit animation
