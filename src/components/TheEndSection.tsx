@@ -83,14 +83,15 @@ export default function TheEndSection() {
           <div
             className="absolute pointer-events-none z-10"
             style={{
-              left: '-10%',
-              right: '-10%',
-              top: '-40%',
+              left: '-20%',
+              right: '-20%',
+              top: '-80%',
               bottom: 0,
               background: `
-                radial-gradient(ellipse 90% 50% at 50% 75%, rgba(0, 200, 255, 0.2) 0%, transparent 55%),
-                radial-gradient(ellipse 60% 40% at 35% 80%, rgba(255, 180, 80, 0.12) 0%, transparent 45%),
-                radial-gradient(ellipse 60% 40% at 65% 80%, rgba(140, 100, 255, 0.1) 0%, transparent 45%)
+                radial-gradient(ellipse 100% 65% at 50% 75%, rgba(0, 200, 255, 0.35) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 55% at 35% 80%, rgba(255, 180, 80, 0.22) 0%, transparent 45%),
+                radial-gradient(ellipse 70% 55% at 65% 80%, rgba(140, 100, 255, 0.18) 0%, transparent 45%),
+                radial-gradient(ellipse 50% 30% at 50% 90%, rgba(255, 50, 100, 0.12) 0%, transparent 40%)
               `,
             }}
           />
