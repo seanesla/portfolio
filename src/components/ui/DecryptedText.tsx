@@ -24,14 +24,13 @@ export default function DecryptedText({
     [...text].map((ch) => (ch === ' ' ? ' ' : randomChar()))
   )
   const revealedRef = useRef<boolean[]>(Array(text.length).fill(false))
-  const [, forceRender] = useState(0)
-  const hasStartedRef = useRef(false)
+  const [hasStarted, setHasStarted] = useState(false)
 
   // Reset when text changes
   useEffect(() => {
     revealedRef.current = Array(text.length).fill(false)
     setDisplayChars([...text].map((ch) => (ch === ' ' ? ' ' : randomChar())))
-    hasStartedRef.current = false
+    setHasStarted(false)
   }, [text])
 
   // Build reveal order
@@ -58,9 +57,8 @@ export default function DecryptedText({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasStartedRef.current) {
-          hasStartedRef.current = true
-          forceRender((n) => n + 1)
+        if (entry.isIntersecting) {
+          setHasStarted(true)
           observer.disconnect()
         }
       },
@@ -73,7 +71,7 @@ export default function DecryptedText({
 
   // Scramble + reveal loop
   useEffect(() => {
-    if (!hasStartedRef.current) return
+    if (!hasStarted) return
 
     const order = buildRevealOrder()
     let step = 0
@@ -112,8 +110,7 @@ export default function DecryptedText({
     }, 30)
 
     return () => clearInterval(interval)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, speed, revealDirection])
+  }, [hasStarted, text, speed, revealDirection])
 
   return (
     <span ref={containerRef} className={className}>
