@@ -1,47 +1,47 @@
-import { useEffect, useRef, useState } from 'react'
-import { useIsMobile } from '../hooks/useIsMobile'
-import ASCIIText from './ui/ASCIIText'
-import BlurText from './ui/BlurText'
-import CityOverlays from './ui/CityOverlays'
+import { useEffect, useRef, useState } from "react";
+import { useIsMobile } from "../hooks/useIsMobile";
+import ASCIIText from "./ui/ASCIIText";
+import BlurText from "./ui/BlurText";
+import CityOverlays from "./ui/CityOverlays";
 
 export default function TheEndSection() {
-  const isMobile = useIsMobile()
-  const blurRef = useRef<HTMLDivElement>(null)
-  const [blurVisible, setBlurVisible] = useState(false)
-  const cityRef = useRef<HTMLDivElement>(null)
-  const [cityVisible, setCityVisible] = useState(false)
+  const isMobile = useIsMobile();
+  const blurRef = useRef<HTMLDivElement>(null);
+  const [blurVisible, setBlurVisible] = useState(false);
+  const cityRef = useRef<HTMLDivElement>(null);
+  const [cityVisible, setCityVisible] = useState(false);
 
   // Trigger BlurText animation only when it scrolls into view
   useEffect(() => {
-    if (!blurRef.current) return
+    if (!blurRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setBlurVisible(true)
-          observer.disconnect()
+          setBlurVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.3 }
-    )
-    observer.observe(blurRef.current)
-    return () => observer.disconnect()
-  }, [])
+      { threshold: 0.3 },
+    );
+    observer.observe(blurRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   // Trigger city overlays when skyline scrolls into view
   useEffect(() => {
-    if (!cityRef.current) return
+    if (!cityRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setCityVisible(true)
-          observer.disconnect()
+          setCityVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.1 }
-    )
-    observer.observe(cityRef.current)
-    return () => observer.disconnect()
-  }, [])
+      { threshold: 0.1 },
+    );
+    observer.observe(cityRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section data-end-section>
@@ -89,9 +89,9 @@ export default function TheEndSection() {
           <div
             className="absolute pointer-events-none z-10"
             style={{
-              left: '-20%',
-              right: '-20%',
-              top: '-80%',
+              left: "-20%",
+              right: "-20%",
+              top: "-80%",
               bottom: 0,
               background: `
                 radial-gradient(ellipse 100% 65% at 50% 75%, rgba(0, 200, 255, 0.35) 0%, transparent 55%),
@@ -112,5 +112,5 @@ export default function TheEndSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

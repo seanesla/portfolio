@@ -1,168 +1,213 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import BlurText from './ui/BlurText'
-import DecryptedText from './ui/DecryptedText'
-import ProjectCard from './projects/ProjectCard'
-import ProjectMedia from './projects/ProjectMedia'
-import { PROJECTS } from './projects/projectData'
-import { useIsMobile } from '../hooks/useIsMobile'
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import BlurText from "./ui/BlurText";
+import DecryptedText from "./ui/DecryptedText";
+import ProjectCard from "./projects/ProjectCard";
+import ProjectMedia from "./projects/ProjectMedia";
+import { PROJECTS } from "./projects/projectData";
+import { useIsMobile } from "../hooks/useIsMobile";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
-const CARD_COUNT = PROJECTS.length
+const CARD_COUNT = PROJECTS.length;
 
 export default function ProjectsSection() {
-  const isMobile = useIsMobile()
-  const scrollPerCard = isMobile ? 500 : 800
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const titleRef = useRef<HTMLDivElement>(null)
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
-  const panelRef = useRef<HTMLDivElement>(null)
-  const fillRef = useRef<HTMLDivElement>(null)
-  const dotRef = useRef<HTMLDivElement>(null)
-  const mediaRef = useRef<HTMLDivElement>(null)
-  const mobileIndicatorRef = useRef<HTMLDivElement>(null)
-  const mobileFillRef = useRef<HTMLDivElement>(null)
-  const activeIdxRef = useRef(-1)
-  const [activeIndex, setActiveIndex] = useState(-1)
+  const isMobile = useIsMobile();
+  const scrollPerCard = isMobile ? 500 : 800;
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const mobileIndicatorRef = useRef<HTMLDivElement>(null);
+  const mobileFillRef = useRef<HTMLDivElement>(null);
+  const activeIdxRef = useRef(-1);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
-    const section = sectionRef.current
-    const title = titleRef.current
-    if (!section) return
+    const section = sectionRef.current;
+    const title = titleRef.current;
+    if (!section) return;
 
-    const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[]
-    if (cards.length === 0) return
+    const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+    if (cards.length === 0) return;
 
     const ctx = gsap.context(() => {
       // Initial states: title hidden, all cards below viewport
       if (title) {
-        gsap.set(title, { opacity: 0, y: 30 })
+        gsap.set(title, { opacity: 0, y: 30 });
       }
       cards.forEach((card) => {
-        gsap.set(card, { yPercent: 100, opacity: 1, transformOrigin: 'center bottom' })
-      })
+        gsap.set(card, {
+          yPercent: 100,
+          opacity: 1,
+          transformOrigin: "center bottom",
+        });
+      });
 
-      const totalScroll = scrollPerCard * CARD_COUNT + 400
+      const totalScroll = scrollPerCard * CARD_COUNT + 400;
 
       // Card phase timing (declared early for onUpdate)
-      const cardStart = 0.10
-      const cardRange = 0.88 - cardStart
-      const perCard = cardRange / CARD_COUNT
+      const cardStart = 0.1;
+      const cardRange = 0.88 - cardStart;
+      const perCard = cardRange / CARD_COUNT;
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: 'top top',
+          start: "top top",
           end: `+=${totalScroll}`,
           pin: true,
           scrub: 0.5,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            const p = self.progress
+            const p = self.progress;
 
             // Discrete index for React state
-            const idx = p >= cardStart
-              ? Math.min(Math.floor((p - cardStart) / perCard), CARD_COUNT - 1)
-              : -1
+            const idx =
+              p >= cardStart
+                ? Math.min(
+                    Math.floor((p - cardStart) / perCard),
+                    CARD_COUNT - 1,
+                  )
+                : -1;
             if (idx !== activeIdxRef.current) {
-              activeIdxRef.current = idx
-              setActiveIndex(idx)
+              activeIdxRef.current = idx;
+              setActiveIndex(idx);
             }
 
             // Continuous fill for direct DOM updates (no re-renders)
-            const fillPct = Math.max(0, Math.min(1, (p - cardStart) / cardRange))
-            if (fillRef.current) fillRef.current.style.height = `${fillPct * 100}%`
-            if (dotRef.current) dotRef.current.style.top = `${fillPct * 100}%`
-            if (mobileFillRef.current) mobileFillRef.current.style.width = `${fillPct * 100}%`
+            const fillPct = Math.max(
+              0,
+              Math.min(1, (p - cardStart) / cardRange),
+            );
+            if (fillRef.current)
+              fillRef.current.style.height = `${fillPct * 100}%`;
+            if (dotRef.current) dotRef.current.style.top = `${fillPct * 100}%`;
+            if (mobileFillRef.current)
+              mobileFillRef.current.style.width = `${fillPct * 100}%`;
           },
         },
-      })
+      });
 
       // Title phase: 0.00–0.06 fade in, 0.06–0.12 fade out
-      const titleInEnd = 0.06
-      const titleOutEnd = 0.12
+      const titleInEnd = 0.06;
+      const titleOutEnd = 0.12;
 
       if (title) {
-        tl.to(title, { opacity: 1, y: 0, duration: titleInEnd, ease: 'power2.out' }, 0)
-        tl.to(title, { opacity: 0, y: -20, duration: titleOutEnd - titleInEnd, ease: 'power2.in' }, titleInEnd)
+        tl.to(
+          title,
+          { opacity: 1, y: 0, duration: titleInEnd, ease: "power2.out" },
+          0,
+        );
+        tl.to(
+          title,
+          {
+            opacity: 0,
+            y: -20,
+            duration: titleOutEnd - titleInEnd,
+            ease: "power2.in",
+          },
+          titleInEnd,
+        );
       }
 
       // Card phases
 
       cards.forEach((card, i) => {
-        const enter = cardStart + i * perCard
-        const enterEnd = enter + perCard * 0.25
+        const enter = cardStart + i * perCard;
+        const enterEnd = enter + perCard * 0.25;
 
         // Slide card up into view
-        tl.to(card, {
-          yPercent: 0,
-          duration: enterEnd - enter,
-          ease: 'power2.out',
-        }, enter)
+        tl.to(
+          card,
+          {
+            yPercent: 0,
+            duration: enterEnd - enter,
+            ease: "power2.out",
+          },
+          enter,
+        );
 
         // Scale down + shift previous cards behind
         for (let j = 0; j < i; j++) {
-          const depth = i - j
-          const targetScale = 1 - depth * 0.03
-          const targetY = -depth * 28
+          const depth = i - j;
+          const targetScale = 1 - depth * 0.03;
+          const targetY = -depth * 28;
 
-          tl.to(cards[j], {
-            scale: targetScale,
-            y: targetY,
-            duration: enterEnd - enter,
-            ease: 'power2.out',
-          }, enter)
+          tl.to(
+            cards[j],
+            {
+              scale: targetScale,
+              y: targetY,
+              duration: enterEnd - enter,
+              ease: "power2.out",
+            },
+            enter,
+          );
         }
-      })
+      });
 
       // Exit: fade out ALL cards (not just the last one, so stacked cards don't bleed into the next section)
-      const exitStart = 0.92
+      const exitStart = 0.92;
       cards.forEach((card) => {
-        tl.to(card, {
-          opacity: 0,
-          scale: 0.95,
-          duration: 1 - exitStart,
-          ease: 'power2.in',
-        }, exitStart)
-      })
+        tl.to(
+          card,
+          {
+            opacity: 0,
+            scale: 0.95,
+            duration: 1 - exitStart,
+            ease: "power2.in",
+          },
+          exitStart,
+        );
+      });
 
       // Desktop panel fade in/out
-      const panel = panelRef.current
+      const panel = panelRef.current;
       if (panel) {
-        gsap.set(panel, { opacity: 0 })
-        tl.to(panel, { opacity: 1, duration: 0.04 }, cardStart)
-        tl.to(panel, { opacity: 0, duration: 0.06 }, exitStart)
+        gsap.set(panel, { opacity: 0 });
+        tl.to(panel, { opacity: 1, duration: 0.04 }, cardStart);
+        tl.to(panel, { opacity: 0, duration: 0.06 }, exitStart);
       }
 
       // Media showcase fade in/out
-      const media = mediaRef.current
+      const media = mediaRef.current;
       if (media) {
-        gsap.set(media, { opacity: 0 })
-        tl.to(media, { opacity: 1, duration: 0.04 }, cardStart)
-        tl.to(media, { opacity: 0, duration: 0.06 }, exitStart)
+        gsap.set(media, { opacity: 0 });
+        tl.to(media, { opacity: 1, duration: 0.04 }, cardStart);
+        tl.to(media, { opacity: 0, duration: 0.06 }, exitStart);
       }
 
       // Mobile indicator fade in/out
-      const mobileInd = mobileIndicatorRef.current
+      const mobileInd = mobileIndicatorRef.current;
       if (mobileInd) {
-        gsap.set(mobileInd, { opacity: 0 })
-        tl.to(mobileInd, { opacity: 1, duration: 0.04 }, cardStart)
-        tl.to(mobileInd, { opacity: 0, duration: 0.06 }, exitStart)
+        gsap.set(mobileInd, { opacity: 0 });
+        tl.to(mobileInd, { opacity: 1, duration: 0.04 }, cardStart);
+        tl.to(mobileInd, { opacity: 0, duration: 0.06 }, exitStart);
       }
-    }, sectionRef)
+    }, sectionRef);
 
-    return () => ctx.revert()
-  }, [scrollPerCard])
+    return () => ctx.revert();
+  }, [scrollPerCard]);
 
-  const currentProject = activeIndex >= 0 ? PROJECTS[activeIndex] : null
+  const currentProject = activeIndex >= 0 ? PROJECTS[activeIndex] : null;
 
   return (
-    <div ref={sectionRef} data-nav-id="projects" className="relative h-[1px] overflow-visible">
+    <div
+      ref={sectionRef}
+      data-nav-id="projects"
+      className="relative h-[1px] overflow-visible"
+    >
       <div className="h-screen flex items-end justify-center pb-10 relative">
         {/* Section title */}
-        <div ref={titleRef} className="absolute inset-0 flex flex-col items-center justify-center z-[10] pointer-events-none">
+        <div
+          ref={titleRef}
+          className="absolute inset-0 flex flex-col items-center justify-center z-[10] pointer-events-none"
+        >
           <BlurText
             text="projects"
             className="text-[clamp(2rem,5vw,3.5rem)] font-extralight tracking-wide text-white/90"
@@ -174,7 +219,7 @@ export default function ProjectsSection() {
         <div
           ref={mediaRef}
           className="absolute top-4 left-0 right-0 z-[5] pointer-events-none flex items-center justify-center"
-          style={{ height: isMobile ? '45vh' : '50vh' }}
+          style={{ height: isMobile ? "45vh" : "50vh" }}
         >
           {currentProject?.media && (
             <ProjectMedia key={activeIndex} project={currentProject} />
@@ -185,7 +230,9 @@ export default function ProjectsSection() {
         {PROJECTS.map((project, i) => (
           <div
             key={project.id}
-            ref={(el) => { cardsRef.current[i] = el }}
+            ref={(el) => {
+              cardsRef.current[i] = el;
+            }}
             className="absolute inset-0 flex items-end justify-center pb-6 md:pb-10"
             style={{ zIndex: i + 1 }}
           >
@@ -201,7 +248,10 @@ export default function ProjectsSection() {
           className="absolute left-6 lg:left-10 xl:left-16 top-1/2 -translate-y-1/2 z-[10] hidden lg:flex items-center gap-5"
         >
           {/* Rail container */}
-          <div className="relative flex flex-col items-center" style={{ height: 280 }}>
+          <div
+            className="relative flex flex-col items-center"
+            style={{ height: 280 }}
+          >
             {/* Top number */}
             <span className="text-[0.6rem] tracking-[0.15em] text-white/25 font-light tabular-nums mb-2">
               01
@@ -217,8 +267,9 @@ export default function ProjectsSection() {
                 ref={fillRef}
                 className="absolute top-0 left-0 w-full rounded-full"
                 style={{
-                  height: '0%',
-                  background: 'linear-gradient(to bottom, rgba(140,180,255,0.1), rgba(140,180,255,0.35))',
+                  height: "0%",
+                  background:
+                    "linear-gradient(to bottom, rgba(140,180,255,0.1), rgba(140,180,255,0.35))",
                 }}
               />
 
@@ -226,18 +277,18 @@ export default function ProjectsSection() {
               <div
                 ref={dotRef}
                 className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
-                style={{ top: '0%' }}
+                style={{ top: "0%" }}
               >
                 <div
                   className="w-[7px] h-[7px] rounded-full bg-[rgba(140,180,255,0.85)]"
-                  style={{ animation: 'glow-pulse 2s ease-in-out infinite' }}
+                  style={{ animation: "glow-pulse 2s ease-in-out infinite" }}
                 />
               </div>
             </div>
 
             {/* Bottom number */}
             <span className="text-[0.6rem] tracking-[0.15em] text-white/25 font-light tabular-nums mt-2">
-              {String(CARD_COUNT).padStart(2, '0')}
+              {String(CARD_COUNT).padStart(2, "0")}
             </span>
           </div>
 
@@ -278,7 +329,8 @@ export default function ProjectsSection() {
         >
           {/* Counter */}
           <span className="text-[0.7rem] tracking-[0.15em] text-white/30 font-light tabular-nums">
-            {String(Math.max(activeIndex + 1, 1)).padStart(2, '0')}/{String(CARD_COUNT).padStart(2, '0')}
+            {String(Math.max(activeIndex + 1, 1)).padStart(2, "0")}/
+            {String(CARD_COUNT).padStart(2, "0")}
           </span>
 
           {/* Horizontal bar */}
@@ -288,13 +340,14 @@ export default function ProjectsSection() {
               ref={mobileFillRef}
               className="absolute top-0 left-0 h-full rounded-full"
               style={{
-                width: '0%',
-                background: 'linear-gradient(to right, rgba(140,180,255,0.15), rgba(140,180,255,0.4))',
+                width: "0%",
+                background:
+                  "linear-gradient(to right, rgba(140,180,255,0.15), rgba(140,180,255,0.4))",
               }}
             />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

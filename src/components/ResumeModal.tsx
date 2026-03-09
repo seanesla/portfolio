@@ -1,106 +1,121 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { gsap } from 'gsap'
+import { useEffect, useRef, useState, useCallback } from "react";
+import { gsap } from "gsap";
 
-const RESUME_PDF_URL = '/resumefeb172026.pdf'
-const RESUME_DATE = 'Feb 17, 2026'
+const RESUME_PDF_URL = "/resumefeb172026.pdf";
+const RESUME_DATE = "Feb 17, 2026";
 
 interface Props {
-  open: boolean
-  onClose: () => void
+  open: boolean;
+  onClose: () => void;
 }
 
 export default function ResumeModal({ open, onClose }: Props) {
-  const modalRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [pageNum, setPageNum] = useState(1)
-  const [numPages, setNumPages] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const pdfDocRef = useRef<{ getPage: (num: number) => Promise<any>; numPages: number } | null>(null)
-  const renderingRef = useRef(false)
+  const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [pageNum, setPageNum] = useState(1);
+  const [numPages, setNumPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const pdfDocRef = useRef<{
+    getPage: (num: number) => Promise<any>;
+    numPages: number;
+  } | null>(null);
+  const renderingRef = useRef(false);
 
-  const pendingPageRef = useRef<number | null>(null)
+  const pendingPageRef = useRef<number | null>(null);
 
   const renderPage = useCallback(async (num: number) => {
-    const pdfDoc = pdfDocRef.current
-    if (!pdfDoc || !canvasRef.current) return
+    const pdfDoc = pdfDocRef.current;
+    if (!pdfDoc || !canvasRef.current) return;
     if (renderingRef.current) {
       // Queue this page so it renders after the current one finishes
-      pendingPageRef.current = num
-      return
+      pendingPageRef.current = num;
+      return;
     }
-    renderingRef.current = true
+    renderingRef.current = true;
 
     try {
-      const page = await pdfDoc.getPage(num)
-      const canvas = canvasRef.current
-      if (!canvas) { renderingRef.current = false; return }
-      const ctx = canvas.getContext('2d')!
-      const container = canvas.parentElement!
-      const containerWidth = container.clientWidth - (window.innerWidth < 768 ? 16 : 48)
-      const viewport = page.getViewport({ scale: 1 })
-      const scale = Math.min(containerWidth / viewport.width, 2)
-      const scaledViewport = page.getViewport({ scale })
+      const page = await pdfDoc.getPage(num);
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        renderingRef.current = false;
+        return;
+      }
+      const ctx = canvas.getContext("2d")!;
+      const container = canvas.parentElement!;
+      const containerWidth =
+        container.clientWidth - (window.innerWidth < 768 ? 16 : 48);
+      const viewport = page.getViewport({ scale: 1 });
+      const scale = Math.min(containerWidth / viewport.width, 2);
+      const scaledViewport = page.getViewport({ scale });
 
-      const outputScale = window.devicePixelRatio || 1
-      canvas.width = Math.floor(scaledViewport.width * outputScale)
-      canvas.height = Math.floor(scaledViewport.height * outputScale)
-      canvas.style.width = Math.floor(scaledViewport.width) + 'px'
-      canvas.style.height = Math.floor(scaledViewport.height) + 'px'
+      const outputScale = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(scaledViewport.width * outputScale);
+      canvas.height = Math.floor(scaledViewport.height * outputScale);
+      canvas.style.width = Math.floor(scaledViewport.width) + "px";
+      canvas.style.height = Math.floor(scaledViewport.height) + "px";
 
-      const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
+      const transform =
+        outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 
       await page.render({
         canvasContext: ctx,
         transform,
         viewport: scaledViewport,
-      }).promise
+      }).promise;
     } catch {
-      setError('Failed to render page.')
+      setError("Failed to render page.");
     } finally {
-      renderingRef.current = false
+      renderingRef.current = false;
       // If a page change was queued while we were rendering, render it now
-      const pending = pendingPageRef.current
+      const pending = pendingPageRef.current;
       if (pending !== null) {
-        pendingPageRef.current = null
-        renderPage(pending)
+        pendingPageRef.current = null;
+        renderPage(pending);
       }
     }
-  }, [])
+  }, []);
 
   // Load PDF when modal opens
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
 
-    let cancelled = false
-    ;(async () => {
+    let cancelled = false;
+    (async () => {
       if (pdfDocRef.current) {
-        renderPage(pageNum)
-        return
+        renderPage(pageNum);
+        return;
       }
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       try {
-        const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs' as any)
+        const pdfjsLib = await import(
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" as any
+        );
         pdfjsLib.GlobalWorkerOptions.workerSrc =
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs'
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
 
-        const loadingTask = pdfjsLib.getDocument(RESUME_PDF_URL)
-        const doc = await loadingTask.promise
-        if (cancelled) return
-        pdfDocRef.current = doc
-        setNumPages(doc.numPages)
-        renderPage(1)
+        const loadingTask = pdfjsLib.getDocument(RESUME_PDF_URL);
+        const doc = await loadingTask.promise;
+        if (cancelled) return;
+        pdfDocRef.current = doc;
+        setNumPages(doc.numPages);
+        renderPage(1);
       } catch {
-        if (!cancelled) setError('Unable to load resume. Please try the download link below.')
+        if (!cancelled)
+          setError(
+            "Unable to load resume. Please try the download link below.",
+          );
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
-    })()
+    })();
 
-    return () => { cancelled = true }
-  }, [open, pageNum, renderPage])
+    return () => {
+      cancelled = true;
+    };
+  }, [open, pageNum, renderPage]);
 
   // Open/close animation
   useEffect(() => {
@@ -108,32 +123,32 @@ export default function ResumeModal({ open, onClose }: Props) {
       gsap.fromTo(
         contentRef.current,
         { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
-      )
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      );
     }
-  }, [open])
+  }, [open]);
 
   // Escape key
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [open, onClose])
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, onClose]);
 
   function handleClose() {
     gsap.to(contentRef.current, {
       y: 40,
       opacity: 0,
       duration: 0.4,
-      ease: 'power2.in',
+      ease: "power2.in",
       onComplete: onClose,
-    })
+    });
   }
 
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div
@@ -154,8 +169,18 @@ export default function ResumeModal({ open, onClose }: Props) {
             onClick={handleClose}
             className="inline-flex items-center gap-2 px-4 py-2 bg-transparent border border-white/20 text-white/70 text-[0.85rem] tracking-[0.05em] cursor-pointer transition-all duration-300 hover:bg-white/10 hover:text-white hover:border-white/40"
           >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back
           </button>
@@ -164,12 +189,19 @@ export default function ResumeModal({ open, onClose }: Props) {
         {/* PDF Viewer */}
         <div className="flex-1 overflow-auto flex items-start justify-center p-2 md:p-6 bg-[#080808]">
           {loading && (
-            <span className="text-white/40 text-sm tracking-[0.1em]">Loading resume...</span>
+            <span className="text-white/40 text-sm tracking-[0.1em]">
+              Loading resume...
+            </span>
           )}
           {error && (
-            <span className="text-red-400/80 text-sm tracking-[0.05em]">{error}</span>
+            <span className="text-red-400/80 text-sm tracking-[0.05em]">
+              {error}
+            </span>
           )}
-          <canvas ref={canvasRef} className={`max-w-full h-auto shadow-[0_4px_20px_rgba(0,0,0,0.5)] ${loading || error ? 'hidden' : ''}`} />
+          <canvas
+            ref={canvasRef}
+            className={`max-w-full h-auto shadow-[0_4px_20px_rgba(0,0,0,0.5)] ${loading || error ? "hidden" : ""}`}
+          />
         </div>
 
         {/* Controls */}
@@ -201,5 +233,5 @@ export default function ResumeModal({ open, onClose }: Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }
