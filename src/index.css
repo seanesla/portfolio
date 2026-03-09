@@ -108,4 +108,17 @@
   100% { opacity: 0; transform: translateY(-60px) translateX(var(--drift-x, 0px)); }
 }
 
+/* Hero name Nabla palette */
+.hero-name-nabla {
+  font-palette: --hero-palette;
+}
+
+@font-palette-values --hero-palette {
+  font-family: "Nabla";
+  override-colors:
+    0 #fde047,
+    1 #fbbf24,
+    2 #713f12;
+}
+
 

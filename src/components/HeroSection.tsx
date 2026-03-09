@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { gsap } from 'gsap'
 import BlurText from './ui/BlurText'
 import Magnet from './ui/Magnet'
@@ -39,6 +39,30 @@ const SOCIAL_LINKS = [
 ]
 
 export default function HeroSection({ visible }: Props) {
+  const nameRef = useRef<HTMLDivElement>(null)
+  const shimmerTl = useRef<gsap.core.Timeline | null>(null)
+
+  const startShimmer = useCallback(() => {
+    if (!nameRef.current) return
+    const chars = nameRef.current.querySelectorAll('.blur-char')
+    const tl = gsap.timeline({ repeat: -1 })
+    // Wave of hue-rotate across letters: yellow (0deg) → green (~75deg) → back
+    tl.to(chars, {
+      keyframes: [
+        { filter: 'hue-rotate(0deg)', duration: 0 },
+        { filter: 'hue-rotate(75deg)', duration: 1.5 },
+        { filter: 'hue-rotate(0deg)', duration: 1.5 },
+      ],
+      stagger: 0.2,
+      ease: 'sine.inOut',
+    })
+    shimmerTl.current = tl
+  }, [])
+
+  useEffect(() => {
+    return () => { shimmerTl.current?.kill() }
+  }, [])
+
   useEffect(() => {
     if (!visible) return
     // Stagger in subtitle and social links after blur text finishes
@@ -65,12 +89,16 @@ export default function HeroSection({ visible }: Props) {
 
   return (
     <section className="hero-content relative z-10 h-screen flex flex-col items-center justify-center text-center px-6 pb-[8vh]" style={{ visibility: visible ? 'visible' : 'hidden' }}>
-      <BlurText
-        text="Sean Esla"
-        className="text-[clamp(3rem,8vw,6rem)] font-semibold tracking-tight text-white/90 mb-3"
-        animate={visible}
-        delay={0.2}
-      />
+      <div ref={nameRef}>
+        <BlurText
+          text="Sean Esla"
+          className="hero-name-nabla text-[clamp(3rem,8vw,6rem)] tracking-tight mb-3"
+          style={{ fontFamily: "'Nabla', cursive" }}
+          animate={visible}
+          delay={0.2}
+          onComplete={startShimmer}
+        />
+      </div>
 
       <p
         className="hero-subtitle text-[0.85rem] md:text-[0.8rem] font-light tracking-[0.15em] uppercase text-white/45 mb-8 opacity-0 translate-y-[10px]"
