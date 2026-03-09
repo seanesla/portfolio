@@ -8,7 +8,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          three: ['three', '@react-three/fiber', '@react-three/postprocessing', 'postprocessing'],
+          three: ['three'],
           gsap: ['gsap'],
         },
       },

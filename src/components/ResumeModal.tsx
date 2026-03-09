@@ -17,7 +17,7 @@ export default function ResumeModal({ open, onClose }: Props) {
   const [numPages, setNumPages] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const pdfDocRef = useRef<any>(null)
+  const pdfDocRef = useRef<{ getPage: (num: number) => Promise<any>; numPages: number } | null>(null)
   const renderingRef = useRef(false)
 
   const pendingPageRef = useRef<number | null>(null)
