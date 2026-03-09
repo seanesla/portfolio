@@ -134,7 +134,7 @@ export default function WaveBackground({ paused = false }: WaveBackgroundProps) 
         gl!.shaderSource(shader, source)
         gl!.compileShader(shader)
         if (!gl!.getShaderParameter(shader, gl!.COMPILE_STATUS)) {
-          console.error('WaveBackground shader error:', gl!.getShaderInfoLog(shader))
+          // shader compilation failed
           gl!.deleteShader(shader)
           return null
         }
@@ -150,7 +150,7 @@ export default function WaveBackground({ paused = false }: WaveBackgroundProps) 
       gl.attachShader(program, fs)
       gl.linkProgram(program)
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('WaveBackground link error:', gl.getProgramInfoLog(program))
+        // program linking failed
         return false
       }
       gl.useProgram(program)

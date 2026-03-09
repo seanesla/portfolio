@@ -112,7 +112,8 @@ export default function DecryptedText({
     }, 30)
 
     return () => clearInterval(interval)
-  }, [hasStartedRef.current, text, speed, revealDirection])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, speed, revealDirection])
 
   return (
     <span ref={containerRef} className={className}>

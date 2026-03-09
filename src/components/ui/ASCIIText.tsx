@@ -149,14 +149,14 @@ class AsciiFilter {
           const i = x * 4 + y * 4 * w
           const [r, g, b, a] = [imgData[i], imgData[i + 1], imgData[i + 2], imgData[i + 3]]
           if (a === 0) { str += ' '; continue }
-          let gray = (0.3 * r + 0.6 * g + 0.1 * b) / 255
+          const gray = (0.3 * r + 0.6 * g + 0.1 * b) / 255
           let idx = Math.floor((1 - gray) * (this.charset.length - 1))
           if (this.invert) idx = this.charset.length - idx - 1
           str += this.charset[idx]
         }
         str += '\n'
       }
-      this.pre.innerHTML = str
+      this.pre.textContent = str
     }
   }
 
