@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GlassSurface from './ui/GlassSurface'
+import { CHAPTER_MID_PROGRESS } from './life/LifeChapters'
 
 interface Props {
   visible: boolean
@@ -10,9 +11,14 @@ interface Props {
 const NAV_LINKS = [
   { label: 'About', navId: 'about' },
   { label: 'Travel', navId: 'travel' },
-  { label: 'Keyboards', navId: 'keyboards' },
   { label: 'Projects', navId: 'projects' },
 ]
+
+// Sub-chapter navIds that live inside the single "life" ScrollTrigger
+const LIFE_CHAPTERS: Record<string, number> = {
+  about: CHAPTER_MID_PROGRESS.about,
+  travel: CHAPTER_MID_PROGRESS.travel,
+}
 
 export default function Navbar({ visible }: Props) {
   const navRef = useRef<HTMLDivElement>(null)
@@ -40,14 +46,17 @@ export default function Navbar({ visible }: Props) {
     if (!visible) return
 
     const timer = setTimeout(() => {
-      const navIds = NAV_LINKS.map(l => l.navId)
+      // Cache the "life" ScrollTrigger (single pin for all life chapters)
+      // and the "projects" ScrollTrigger (its own pin)
+      const lifeEl = document.querySelector('[data-nav-id="life"]')
+      const lifeST = lifeEl ? ScrollTrigger.getAll().find(t => t.trigger === lifeEl) : undefined
 
-      // Cache ScrollTrigger references once
-      cachedTriggersRef.current = navIds.map(navId => {
-        const el = document.querySelector(`[data-nav-id="${navId}"]`)
-        const st = el ? ScrollTrigger.getAll().find(t => t.trigger === el) : undefined
-        return st ? { navId, st } : null
-      }).filter(Boolean) as { navId: string; st: ScrollTrigger }[]
+      const projectsEl = document.querySelector('[data-nav-id="projects"]')
+      const projectsST = projectsEl ? ScrollTrigger.getAll().find(t => t.trigger === projectsEl) : undefined
+
+      // Build cached triggers for non-life sections
+      cachedTriggersRef.current = []
+      if (projectsST) cachedTriggersRef.current.push({ navId: 'projects', st: projectsST })
 
       endSectionRef.current = document.querySelector('[data-end-section]')
 
@@ -57,15 +66,26 @@ export default function Navbar({ visible }: Props) {
         requestAnimationFrame(() => {
           rafPendingRef.current = false
 
-          // Active section
           const scrollY = window.scrollY
           const vh = window.innerHeight
           let active: string | null = null
-          for (const { navId, st } of cachedTriggersRef.current) {
-            if (scrollY >= st.start - vh * 0.3 && scrollY <= st.end + vh * 0.1) {
-              active = navId
+
+          // Check life chapters via progress within the single life ScrollTrigger
+          if (lifeST && scrollY >= lifeST.start - vh * 0.3 && scrollY <= lifeST.end + vh * 0.1) {
+            const p = lifeST.progress
+            if (p < 0.52) active = 'about'
+            else active = 'travel'
+          }
+
+          // Check other sections (projects)
+          if (!active) {
+            for (const { navId, st } of cachedTriggersRef.current) {
+              if (scrollY >= st.start - vh * 0.3 && scrollY <= st.end + vh * 0.1) {
+                active = navId
+              }
             }
           }
+
           if (active !== activeNavRef.current) {
             activeNavRef.current = active
             setActiveNav(active)
@@ -163,6 +183,19 @@ export default function Navbar({ visible }: Props) {
   }, [animatePill])
 
   const handleNavClick = (navId: string) => {
+    // Life sub-chapters: scroll to the correct position within the single "life" pin
+    if (navId in LIFE_CHAPTERS) {
+      const lifeEl = document.querySelector('[data-nav-id="life"]')
+      if (!lifeEl) return
+      const st = ScrollTrigger.getAll().find(t => t.trigger === lifeEl)
+      if (st) {
+        const target = st.start + (st.end - st.start) * LIFE_CHAPTERS[navId]
+        window.scrollTo({ top: target, behavior: 'smooth' })
+      }
+      return
+    }
+
+    // Other sections (projects, etc.)
     const triggerEl = document.querySelector(`[data-nav-id="${navId}"]`)
     if (!triggerEl) return
     const st = ScrollTrigger.getAll().find(t => t.trigger === triggerEl)
