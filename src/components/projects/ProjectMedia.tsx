@@ -65,7 +65,7 @@ export default function ProjectMedia({ project }: { project: Project }) {
   const hasImages = media.images && media.images.length > 0
 
   return (
-    <div className="relative w-full flex items-center justify-center" style={{ height: '45vh' }}>
+    <div className="relative w-full flex items-center justify-center h-[30vh] md:h-[45vh]">
       {/* Video — centered primary */}
       {hasVideo && (
         <video
@@ -76,7 +76,7 @@ export default function ProjectMedia({ project }: { project: Project }) {
           playsInline
           preload="none"
           className="relative z-[2] rounded-xl border border-white/[0.06] shadow-2xl shadow-black/40"
-          style={{ maxHeight: '38vh', maxWidth: '55%', objectFit: 'contain' }}
+          style={{ maxHeight: '38vh', maxWidth: window.innerWidth < 768 ? '90%' : '55%', objectFit: 'contain' }}
         />
       )}
 

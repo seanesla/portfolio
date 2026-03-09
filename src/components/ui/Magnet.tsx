@@ -1,5 +1,6 @@
 import { useRef, type ReactNode, type MouseEvent } from 'react'
 import { gsap } from 'gsap'
+import { useIsTouchDevice } from '../../hooks/useIsMobile'
 
 interface Props {
   children: ReactNode
@@ -9,6 +10,7 @@ interface Props {
 
 export default function Magnet({ children, strength = 0.3, className = '' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const isTouch = useIsTouchDevice()
 
   function handleMove(e: MouseEvent) {
     const el = ref.current!
@@ -26,8 +28,8 @@ export default function Magnet({ children, strength = 0.3, className = '' }: Pro
     <div
       ref={ref}
       className={className}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
+      onMouseMove={isTouch ? undefined : handleMove}
+      onMouseLeave={isTouch ? undefined : handleLeave}
     >
       {children}
     </div>

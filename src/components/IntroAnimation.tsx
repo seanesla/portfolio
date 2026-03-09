@@ -81,7 +81,7 @@ export default function IntroAnimation({ onComplete }: Props) {
     >
       <div
         ref={frameRef}
-        className="w-[250px] h-[136px]"
+        className="w-[180px] h-[98px] md:w-[250px] md:h-[136px]"
         style={{
           backgroundImage: 'url(/sprites/plane-intro-sheet.png)',
           backgroundSize: '300% 300%',

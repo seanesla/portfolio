@@ -182,7 +182,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
     swap()
     intervalRef.current = window.setInterval(swap, delay)
 
-    if (pauseOnHover) {
+    if (pauseOnHover && !window.matchMedia('(hover: none)').matches) {
       const node = container.current!
       const pause = () => {
         tlRef.current?.pause()

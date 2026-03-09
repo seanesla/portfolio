@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: Props) {
 
   return (
     <div
-      className={`group relative rounded-2xl h-[340px] overflow-hidden transition-all duration-300 hover:-translate-y-0.5 ${
+      className={`group relative rounded-2xl h-auto min-h-[280px] md:h-[340px] overflow-hidden transition-all duration-300 hover:-translate-y-0.5 ${
         isWinner
           ? 'border border-amber-300/[0.08] hover:border-amber-300/[0.15] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5),0_0_20px_-5px_rgba(255,200,50,0.04)]'
           : 'border border-white/[0.04] hover:border-white/[0.08] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5),0_0_15px_-5px_rgba(140,180,255,0.03)]'
@@ -109,7 +109,7 @@ export default function ProjectCard({ project }: Props) {
       )}
 
       {/* Content */}
-      <div className="relative z-[1] flex flex-col h-full p-10 md:p-14">
+      <div className="relative z-[1] flex flex-col h-full p-5 md:p-10 lg:p-14">
         {isWinner && project.award && (
           <div className="flex items-center gap-2 mb-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/[0.12] bg-amber-300/[0.03] px-3 py-1">
@@ -137,19 +137,19 @@ export default function ProjectCard({ project }: Props) {
           {project.name}
         </h3>
 
-        <p className="text-[0.7rem] tracking-[0.12em] uppercase text-white/40 mb-5">
+        <p className="text-[0.75rem] md:text-[0.7rem] tracking-[0.12em] uppercase text-white/40 mb-3 md:mb-5">
           {project.hackathon} &middot; {project.date}
         </p>
 
-        <p className="text-[0.9rem] leading-relaxed text-white/60 font-light mb-6 flex-1">
+        <p className="text-[0.9rem] leading-relaxed text-white/60 font-light mb-4 md:mb-6 flex-1">
           {project.description}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
           {project.tech.map((t) => (
             <span
               key={t}
-              className="text-[0.6rem] tracking-[0.08em] uppercase text-white/30 border border-white/[0.08] rounded-full px-2.5 py-1 transition-colors duration-300 group-hover:text-white/40 group-hover:border-white/[0.12]"
+              className="text-[0.65rem] md:text-[0.6rem] tracking-[0.08em] uppercase text-white/30 border border-white/[0.08] rounded-full px-2.5 py-1 transition-colors duration-300 group-hover:text-white/40 group-hover:border-white/[0.12]"
             >
               {t}
             </span>

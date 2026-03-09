@@ -178,7 +178,7 @@ export default function Navbar({ visible }: Props) {
     <div className="fixed top-4 inset-x-0 z-[100] flex justify-center pointer-events-none">
     <div
       ref={navRef}
-      className="pointer-events-auto"
+      className="pointer-events-auto max-w-[calc(100vw-2rem)]"
     >
       <GlassSurface
         width="auto"
@@ -195,7 +195,7 @@ export default function Navbar({ visible }: Props) {
         blueOffset={12}
         style={{ width: 'auto' }}
       >
-        <nav className="relative flex items-center gap-1 px-2">
+        <nav className="relative flex items-center gap-1 px-2 overflow-x-auto" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
           {/* Animated pill indicator */}
           <div
             ref={pillRef}
@@ -213,7 +213,7 @@ export default function Navbar({ visible }: Props) {
               key={link.label}
               ref={(el) => { btnRefs.current[i] = el }}
               onClick={() => handleNavClick(link.navId)}
-              className={`relative z-[1] px-3 py-1.5 text-[0.7rem] tracking-[0.1em] uppercase transition-colors duration-200 whitespace-nowrap cursor-pointer bg-transparent border-none ${
+              className={`relative z-[1] px-3.5 py-2 md:px-3 md:py-1.5 text-[0.75rem] md:text-[0.7rem] tracking-[0.1em] uppercase transition-colors duration-200 whitespace-nowrap cursor-pointer bg-transparent border-none ${
                 activeNav === link.navId ? 'text-white/90' : 'text-white/50 hover:text-white/90'
               }`}
             >

@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useIsTouchDevice } from '../../hooks/useIsMobile'
 
 interface GalleryItem {
   src: string
@@ -13,6 +14,7 @@ interface ThreeDHoverGalleryProps {
 
 export default function ThreeDHoverGallery({ items, className = '' }: ThreeDHoverGalleryProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const isTouch = useIsTouchDevice()
 
   const count = items.length
   const mid = (count - 1) / 2
@@ -27,12 +29,16 @@ export default function ThreeDHoverGallery({ items, className = '' }: ThreeDHove
     }
   }, [hoveredIndex])
 
+  const handleTouchClick = useCallback((i: number) => {
+    setHoveredIndex((prev) => (prev === i ? null : i))
+  }, [])
+
   return (
     <div
-      className={`flex gap-2 ${className}`}
-      style={{ perspective: '1200px', height: '55vh' }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => setHoveredIndex(null)}
+      className={`flex gap-2 h-[40vh] md:h-[55vh] ${className}`}
+      style={{ perspective: '1200px' }}
+      onMouseMove={isTouch ? undefined : handleMouseMove}
+      onMouseLeave={isTouch ? undefined : () => setHoveredIndex(null)}
     >
       {items.map((item, i) => {
         const isHovered = hoveredIndex === i
@@ -40,7 +46,7 @@ export default function ThreeDHoverGallery({ items, className = '' }: ThreeDHove
 
         // 3D rotation: edges rotate inward, center stays flat
         const baseRotateY = ((i - mid) / mid) * 8 // range ~ -8 to +8 degrees
-        const rotateY = isHovered ? 0 : baseRotateY
+        const rotateY = isTouch ? 0 : (isHovered ? 0 : baseRotateY)
 
         // Flex distribution
         const flex = anyHovered ? (isHovered ? 3 : 0.5) : 1
@@ -53,6 +59,7 @@ export default function ThreeDHoverGallery({ items, className = '' }: ThreeDHove
           <div
             key={item.label}
             data-gallery-index={i}
+            onClick={isTouch ? () => handleTouchClick(i) : undefined}
             className="relative overflow-hidden rounded-xl cursor-pointer min-w-0"
             style={{
               flex,

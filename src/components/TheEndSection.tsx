@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import ASCIIText from './ui/ASCIIText'
 import BlurText from './ui/BlurText'
+import CityOverlays from './ui/CityOverlays'
 
 export default function TheEndSection() {
   const blurRef = useRef<HTMLDivElement>(null)
   const [blurVisible, setBlurVisible] = useState(false)
+  const cityRef = useRef<HTMLDivElement>(null)
+  const [cityVisible, setCityVisible] = useState(false)
 
   // Trigger BlurText animation only when it scrolls into view
   useEffect(() => {
@@ -19,6 +22,22 @@ export default function TheEndSection() {
       { threshold: 0.3 }
     )
     observer.observe(blurRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  // Trigger city overlays when skyline scrolls into view
+  useEffect(() => {
+    if (!cityRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCityVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(cityRef.current)
     return () => observer.disconnect()
   }, [])
 
@@ -58,12 +77,32 @@ export default function TheEndSection() {
       </div>
 
       {/* City skyline */}
-      <div className="relative bg-black overflow-hidden max-h-[70vh]">
-        <img
-          src="/media/cityatbottomofwebsitepage.png"
-          alt=""
-          className="w-full block"
-        />
+      <div ref={cityRef} className="relative bg-black">
+        {/* Light pollution glow — sits above the clipped image so it can extend upward */}
+        {cityVisible && (
+          <div
+            className="absolute pointer-events-none z-10"
+            style={{
+              left: '-10%',
+              right: '-10%',
+              top: '-40%',
+              bottom: 0,
+              background: `
+                radial-gradient(ellipse 90% 50% at 50% 75%, rgba(0, 200, 255, 0.2) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 40% at 35% 80%, rgba(255, 180, 80, 0.12) 0%, transparent 45%),
+                radial-gradient(ellipse 60% 40% at 65% 80%, rgba(140, 100, 255, 0.1) 0%, transparent 45%)
+              `,
+            }}
+          />
+        )}
+        <div className="relative overflow-hidden max-h-[70vh]">
+          <img
+            src="/media/cityatbottomofwebsitepage.png"
+            alt=""
+            className="w-full block"
+          />
+          <CityOverlays visible={cityVisible} />
+        </div>
       </div>
     </section>
   )

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -11,6 +12,7 @@ export default function KeyboardShowcase() {
   const imgWrapRef = useRef<HTMLDivElement>(null)
   const vidWrapRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const isMobile = useIsMobile()
 
   // Scroll animations
   useEffect(() => {
@@ -24,14 +26,14 @@ export default function KeyboardShowcase() {
     const ctx = gsap.context(() => {
       // Initial states
       gsap.set(heading, { y: -40, filter: 'blur(8px)', opacity: 0 })
-      gsap.set(imgWrap, { x: -150, rotateY: 35, opacity: 0, transformPerspective: 800 })
-      gsap.set(vidWrap, { x: 150, rotateY: -35, opacity: 0, transformPerspective: 800 })
+      gsap.set(imgWrap, { x: isMobile ? -80 : -150, rotateY: 35, opacity: 0, transformPerspective: 800 })
+      gsap.set(vidWrap, { x: isMobile ? 80 : 150, rotateY: -35, opacity: 0, transformPerspective: 800 })
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
           start: 'top top',
-          end: '+=1100',
+          end: isMobile ? '+=700' : '+=1100',
           pin: true,
           scrub: 0.5,
 
@@ -64,13 +66,13 @@ export default function KeyboardShowcase() {
     }, wrapperRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
 
   return (
     <div ref={wrapperRef} data-nav-id="keyboards" className="relative w-full h-[1px] overflow-visible">
       <div ref={innerRef} className="h-screen flex items-center justify-center z-[2]">
       <div className="w-full">
-        <div className="ml-[8vw] mb-10">
+        <div className="ml-4 md:ml-[8vw] mb-10">
           <h2
             ref={headingRef}
             className="text-[clamp(2rem,4vw,3rem)] font-extralight tracking-wide text-white/80"
@@ -79,8 +81,8 @@ export default function KeyboardShowcase() {
           </h2>
         </div>
 
-        <div className="flex items-start ml-[8vw] mr-[8vw]">
-          <div ref={imgWrapRef} className="w-[30vw] -mt-8 shrink-0">
+        <div className="flex flex-col md:flex-row items-center md:items-start mx-4 md:ml-[8vw] md:mr-[8vw] gap-6 md:gap-0">
+          <div ref={imgWrapRef} className="w-[80vw] md:w-[30vw] md:-mt-8 shrink-0">
             <img
               src="/media/keyboards/gmmkpro.jpeg"
               alt="GMMK Pro"
@@ -92,7 +94,7 @@ export default function KeyboardShowcase() {
             </span>
           </div>
 
-          <div ref={vidWrapRef} className="w-[45vw] -ml-[6vw] mt-12 shrink-0">
+          <div ref={vidWrapRef} className="w-[85vw] md:w-[45vw] md:-ml-[6vw] md:mt-12 shrink-0">
             <div className="rounded-xl overflow-hidden shadow-2xl">
               <video
                 ref={videoRef}

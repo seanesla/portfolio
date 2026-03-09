@@ -3,6 +3,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CardSwap, { Card } from '../ui/CardSwap'
 import TerminalAbout from '../ui/TerminalAbout'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -14,6 +15,7 @@ export default function AboutMoment() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [holdActive, setHoldActive] = useState(false)
   const holdTriggeredRef = useRef(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const section = sectionRef.current
@@ -24,14 +26,14 @@ export default function AboutMoment() {
 
     const ctx = gsap.context(() => {
       // Initial states
-      gsap.set(photo, { x: -120, rotateZ: -3, opacity: 0 })
-      gsap.set(card, { x: 120, rotateZ: 2, opacity: 0 })
+      gsap.set(photo, { x: isMobile ? -60 : -120, rotateZ: -3, opacity: 0 })
+      gsap.set(card, { x: isMobile ? 60 : 120, rotateZ: 2, opacity: 0 })
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: '+=2000',
+          end: isMobile ? '+=1200' : '+=2000',
           pin: true,
           scrub: 0.5,
 
@@ -68,13 +70,13 @@ export default function AboutMoment() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
 
   return (
     <div ref={sectionRef} data-nav-id="about" className="relative h-[1px] overflow-visible">
-      <div ref={innerRef} className="h-screen flex items-center relative z-[2]">
+      <div ref={innerRef} className="h-screen flex flex-col md:flex-row items-center relative z-[2]">
       {/* Video — bleeds left */}
-      <div ref={photoRef} className="absolute left-[5vw] top-1/2 -translate-y-1/2 w-[42vw] h-[55vh] overflow-hidden rounded-2xl">
+      <div ref={photoRef} className="relative w-[85vw] h-[35vh] md:absolute md:left-[5vw] md:top-1/2 md:-translate-y-1/2 md:w-[42vw] md:h-[55vh] overflow-hidden rounded-2xl mt-[10vh] md:mt-0">
         <video
           ref={videoRef}
           className="w-full h-full object-cover rounded-2xl"
@@ -86,10 +88,10 @@ export default function AboutMoment() {
           <source src="/media/flying-montage.mp4" type="video/mp4" />
         </video>
         <CardSwap
-          width={180}
-          height={230}
-          cardDistance={30}
-          verticalDistance={20}
+          width={isMobile ? 120 : 180}
+          height={isMobile ? 155 : 230}
+          cardDistance={isMobile ? 15 : 30}
+          verticalDistance={isMobile ? 10 : 20}
           delay={2000}
           pauseOnHover={true}
           easing="linear"
@@ -113,7 +115,7 @@ export default function AboutMoment() {
       </div>
 
       {/* Terminal card — offset right, overlapping photo */}
-      <div ref={cardRef} className="ml-auto mr-[5vw] md:mr-[8vw] w-[45vw] md:w-[40vw] h-[55vh] relative z-[3]">
+      <div ref={cardRef} className="w-[90vw] h-[40vh] md:ml-auto md:mr-[5vw] lg:mr-[8vw] md:w-[45vw] lg:w-[40vw] md:h-[55vh] relative z-[3] overflow-hidden">
         <TerminalAbout startAnimation={holdActive} />
       </div>
       </div>

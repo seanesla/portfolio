@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ThreeDHoverGallery from '../ui/ThreeDHoverGallery'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -21,6 +22,7 @@ export default function TravelGallery() {
   const innerRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const galleryWrapRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
 
   // GSAP scroll-driven enter/hold/exit
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function TravelGallery() {
         scrollTrigger: {
           trigger: wrapper,
           start: 'top top',
-          end: '+=1000',
+          end: isMobile ? '+=600' : '+=1000',
           pin: true,
           scrub: 0.5,
 
@@ -64,7 +66,7 @@ export default function TravelGallery() {
     }, wrapperRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
 
   return (
     <div ref={wrapperRef} data-nav-id="travel" className="relative w-full h-[1px] overflow-visible">

@@ -73,7 +73,7 @@ export default function HeroSection({ visible }: Props) {
       />
 
       <p
-        className="hero-subtitle text-[0.8rem] font-light tracking-[0.15em] uppercase text-white/45 mb-8 opacity-0 translate-y-[10px]"
+        className="hero-subtitle text-[0.85rem] md:text-[0.8rem] font-light tracking-[0.15em] uppercase text-white/45 mb-8 opacity-0 translate-y-[10px]"
       >
         Student &middot; AI Researcher &middot; Hackathon Builder &middot; Private Pilot
       </p>
@@ -108,7 +108,7 @@ export default function HeroSection({ visible }: Props) {
               text="EXPLORE"
               speed={80}
               revealDirection="start"
-              className="text-[0.6rem] tracking-[0.25em] text-white/30 font-light"
+              className="text-[0.7rem] md:text-[0.6rem] tracking-[0.25em] text-white/30 font-light"
             />
           </div>
         </Magnet>

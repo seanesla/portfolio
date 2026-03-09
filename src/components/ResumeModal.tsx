@@ -38,7 +38,7 @@ export default function ResumeModal({ open, onClose }: Props) {
       if (!canvas) { renderingRef.current = false; return }
       const ctx = canvas.getContext('2d')!
       const container = canvas.parentElement!
-      const containerWidth = container.clientWidth - 48
+      const containerWidth = container.clientWidth - (window.innerWidth < 768 ? 16 : 48)
       const viewport = page.getViewport({ scale: 1 })
       const scale = Math.min(containerWidth / viewport.width, 2)
       const scaledViewport = page.getViewport({ scale })
@@ -143,10 +143,10 @@ export default function ResumeModal({ open, onClose }: Props) {
     >
       <div
         ref={contentRef}
-        className="w-[90%] max-w-[900px] h-[85vh] bg-[rgba(10,10,10,0.95)] border border-white/15 rounded-lg flex flex-col backdrop-blur-[20px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]"
+        className="w-[95%] md:w-[90%] max-w-[900px] h-[90vh] md:h-[85vh] bg-[rgba(10,10,10,0.95)] border border-white/15 rounded-lg flex flex-col backdrop-blur-[20px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]"
       >
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-white/10">
+        <div className="flex justify-between items-center px-4 md:px-6 py-3 md:py-4 border-b border-white/10">
           <span className="text-[0.9rem] font-light tracking-[0.1em] uppercase text-white/70">
             Resume &middot; Updated {RESUME_DATE}
           </span>
@@ -162,7 +162,7 @@ export default function ResumeModal({ open, onClose }: Props) {
         </div>
 
         {/* PDF Viewer */}
-        <div className="flex-1 overflow-auto flex items-start justify-center p-6 bg-[#080808]">
+        <div className="flex-1 overflow-auto flex items-start justify-center p-2 md:p-6 bg-[#080808]">
           {loading && (
             <span className="text-white/40 text-sm tracking-[0.1em]">Loading resume...</span>
           )}
@@ -173,7 +173,7 @@ export default function ResumeModal({ open, onClose }: Props) {
         </div>
 
         {/* Controls */}
-        <div className="flex justify-center items-center gap-4 p-4 bg-black/50 border-t border-white/10">
+        <div className="flex flex-wrap justify-center items-center gap-2 md:gap-4 p-3 md:p-4 bg-black/50 border-t border-white/10">
           <button
             disabled={pageNum <= 1}
             onClick={() => setPageNum((p) => p - 1)}
@@ -194,7 +194,7 @@ export default function ResumeModal({ open, onClose }: Props) {
           <a
             href={RESUME_PDF_URL}
             download
-            className="px-4 py-2 bg-white/10 border border-white/20 text-white/80 text-[0.85rem] no-underline transition-all duration-200 hover:bg-white/20 hover:text-white ml-4"
+            className="px-4 py-2 bg-white/10 border border-white/20 text-white/80 text-[0.85rem] no-underline transition-all duration-200 hover:bg-white/20 hover:text-white ml-0 md:ml-4"
           >
             Download
           </a>

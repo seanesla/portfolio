@@ -6,13 +6,15 @@ import DecryptedText from './ui/DecryptedText'
 import ProjectCard from './projects/ProjectCard'
 import ProjectMedia from './projects/ProjectMedia'
 import { PROJECTS } from './projects/projectData'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const CARD_COUNT = PROJECTS.length
-const SCROLL_PER_CARD = 800
 
 export default function ProjectsSection() {
+  const isMobile = useIsMobile()
+  const scrollPerCard = isMobile ? 500 : 800
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
@@ -42,7 +44,7 @@ export default function ProjectsSection() {
         gsap.set(card, { yPercent: 100, opacity: 1, transformOrigin: 'center bottom' })
       })
 
-      const totalScroll = SCROLL_PER_CARD * CARD_COUNT + 400
+      const totalScroll = scrollPerCard * CARD_COUNT + 400
 
       // Card phase timing (declared early for onUpdate)
       const cardStart = 0.10
@@ -152,7 +154,7 @@ export default function ProjectsSection() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [scrollPerCard])
 
   const currentProject = activeIndex >= 0 ? PROJECTS[activeIndex] : null
 
@@ -172,7 +174,7 @@ export default function ProjectsSection() {
         <div
           ref={mediaRef}
           className="absolute top-4 left-0 right-0 z-[5] pointer-events-none flex items-center justify-center"
-          style={{ height: '50vh' }}
+          style={{ height: isMobile ? '35vh' : '50vh' }}
         >
           {currentProject?.media && (
             <ProjectMedia key={activeIndex} project={currentProject} />
@@ -275,7 +277,7 @@ export default function ProjectsSection() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[10] flex lg:hidden flex-col items-center gap-2"
         >
           {/* Counter */}
-          <span className="text-[0.6rem] tracking-[0.15em] text-white/30 font-light tabular-nums">
+          <span className="text-[0.7rem] tracking-[0.15em] text-white/30 font-light tabular-nums">
             {String(Math.max(activeIndex + 1, 1)).padStart(2, '0')}/{String(CARD_COUNT).padStart(2, '0')}
           </span>
 
