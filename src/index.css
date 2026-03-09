@@ -109,7 +109,7 @@
   100% { opacity: 0; transform: translateY(-60px) translateX(var(--drift-x, 0px)); }
 }
 
-/* Hero name Nabla palette */
+/* Hero name Nabla palette (COLRv1 — works on desktop Chrome/Safari/Firefox) */
 .hero-name-nabla {
   font-palette: --hero-palette;
 }
@@ -120,6 +120,20 @@
     0 #fde047,
     1 #fbbf24,
     2 #713f12;
+}
+
+/*
+ * iOS Safari receives Nabla as OT-SVG (not COLRv1) from Google Fonts.
+ * font-palette has no effect on OT-SVG fonts, so the text renders in
+ * Nabla's dark default SVG colors (appears black on dark background).
+ * On touch-primary devices, swap to Archivo with gold color instead.
+ */
+@media (hover: none) {
+  .hero-name-nabla {
+    font-family: 'Archivo', sans-serif !important;
+    font-weight: 200;
+    color: #fde047;
+  }
 }
 
 
