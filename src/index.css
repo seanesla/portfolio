@@ -22,6 +22,7 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(140, 180, 255, 0.2) transparent;
     overflow-x: hidden;
+    overscroll-behavior: none;
     background: #000;
   }
 
