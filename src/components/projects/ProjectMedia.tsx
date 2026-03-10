@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { Project } from './projectData'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const POLAROID_STYLES = [
   { topOffset: -20, right: '8%', rotate: 4 },
@@ -59,6 +60,7 @@ function TypewriterCaption({ text, delay = 600 }: { text: string; delay?: number
 
 export default function ProjectMedia({ project }: { project: Project }) {
   const { media } = project
+  const isMobile = useIsMobile()
   if (!media) return null
 
   const hasVideo = !!media.video
@@ -76,7 +78,7 @@ export default function ProjectMedia({ project }: { project: Project }) {
           playsInline
           preload="none"
           className="relative z-[2] rounded-xl border border-white/[0.06] shadow-2xl shadow-black/40"
-          style={{ maxHeight: window.innerWidth < 768 ? '42vh' : '38vh', maxWidth: window.innerWidth < 768 ? '90%' : '55%', objectFit: 'contain' }}
+          style={{ maxHeight: isMobile ? '42vh' : '38vh', maxWidth: isMobile ? '90%' : '55%', objectFit: 'contain' }}
         />
       )}
 
@@ -84,7 +86,8 @@ export default function ProjectMedia({ project }: { project: Project }) {
       {!hasVideo && hasImages && (
         <img
           src={media.images![0].src}
-          alt=""
+          alt={`${project.name} screenshot`}
+          loading="lazy"
           className="relative z-[2] rounded-xl border border-white/[0.06] shadow-2xl shadow-black/40"
           style={{ maxHeight: '35vh', maxWidth: '80%', objectFit: 'contain' }}
         />
@@ -142,7 +145,8 @@ export default function ProjectMedia({ project }: { project: Project }) {
             />
             <img
               src={img.src}
-              alt=""
+              alt={img.caption}
+              loading="lazy"
               style={{
                 position: 'relative',
                 width: 400,

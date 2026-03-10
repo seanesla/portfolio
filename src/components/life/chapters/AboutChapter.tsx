@@ -49,19 +49,19 @@ const AboutChapter = forwardRef<AboutChapterRefs, Props>(({ holdActive }, ref) =
           easing="linear"
         >
           <Card>
-            <img src="/media/photoofme.jpeg" alt="" className="w-full h-full object-cover rounded-xl" />
+            <img src="/media/photoofme.jpeg" alt="Portrait of Sean" loading="lazy" className="w-full h-full object-cover rounded-xl" />
           </Card>
           <Card>
-            <img src="/media/photoofme2.jpeg" alt="" className="w-full h-full object-cover rounded-xl" />
+            <img src="/media/photoofme2.jpeg" alt="Sean outdoors" loading="lazy" className="w-full h-full object-cover rounded-xl" />
           </Card>
           <Card>
-            <img src="/media/photoofme3.jpeg" alt="" className="w-full h-full object-cover rounded-xl" />
+            <img src="/media/photoofme3.jpeg" alt="Sean portrait" loading="lazy" className="w-full h-full object-cover rounded-xl" />
           </Card>
           <Card>
-            <img src="/media/photoofme4.jpeg" alt="" className="w-full h-full object-cover rounded-xl" />
+            <img src="/media/photoofme4.jpeg" alt="Sean candid" loading="lazy" className="w-full h-full object-cover rounded-xl" />
           </Card>
           <Card>
-            <img src="/media/melockedinduringhackathon.jpeg" alt="" className="w-full h-full object-cover rounded-xl" />
+            <img src="/media/melockedinduringhackathon.jpeg" alt="Sean at a hackathon" loading="lazy" className="w-full h-full object-cover rounded-xl" />
           </Card>
         </CardSwap>
       </div>

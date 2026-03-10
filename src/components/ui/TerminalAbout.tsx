@@ -23,17 +23,16 @@ interface Props {
   startAnimation: boolean
 }
 
-// Module-level: survives unmount/remount
-let finishedLines: TerminalLine[] | null = null
-let animationComplete = false
+// Module-level cache: survives unmount/remount so the animation only plays once
+const animationCache = { lines: null as TerminalLine[] | null, complete: false }
 
 export default function TerminalAbout({ startAnimation }: Props) {
-  const [lines, setLines] = useState<TerminalLine[]>(finishedLines ?? [])
+  const [lines, setLines] = useState<TerminalLine[]>(animationCache.lines ?? [])
   const [cursorVisible, setCursorVisible] = useState(true)
   const [cursorActive, setCursorActive] = useState(false)
   const [dropdown, setDropdown] = useState<{ filtered: string[]; typed: string } | null>(null)
-  const [headerVisible, setHeaderVisible] = useState(animationComplete)
-  const [inputBoxVisible, setInputBoxVisible] = useState(animationComplete)
+  const [headerVisible, setHeaderVisible] = useState(animationCache.complete)
+  const [inputBoxVisible, setInputBoxVisible] = useState(animationCache.complete)
   const [inputText, setInputText] = useState('')
   const [inputCursorActive, setInputCursorActive] = useState(false)
   const runIdRef = useRef(0)
@@ -67,7 +66,7 @@ export default function TerminalAbout({ startAnimation }: Props) {
 
   // Main animation sequence
   useEffect(() => {
-    if (!startAnimation || animationComplete) return
+    if (!startAnimation || animationCache.complete) return
     const myRunId = ++runIdRef.current
 
     const run = async () => {
@@ -150,9 +149,9 @@ export default function TerminalAbout({ startAnimation }: Props) {
       setInputCursorActive(true)
 
       // Save final state
-      animationComplete = true
+      animationCache.complete = true
       setLines(prev => {
-        finishedLines = prev
+        animationCache.lines = prev
         return prev
       })
     }
@@ -161,7 +160,7 @@ export default function TerminalAbout({ startAnimation }: Props) {
 
     return () => {
       runIdRef.current++
-      if (!animationComplete) {
+      if (!animationCache.complete) {
         setLines([])
         setCursorActive(false)
         setDropdown(null)
